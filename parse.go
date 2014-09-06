@@ -38,7 +38,9 @@ func parse(s string) (<-chan []element, <-chan error) {
 				continue
 			}
 
-			fmt.Println(ln.s)
+			if ln.isTopIndent() {
+				fmt.Println(ln.s)
+			}
 		}
 
 		elemsc <- elements

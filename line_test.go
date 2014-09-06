@@ -4,7 +4,7 @@ import "testing"
 
 func Test_newLine(t *testing.T) {
 	no := 1
-	s := "html"
+	s := "  html"
 
 	ln := newLine(no, s)
 
@@ -14,5 +14,39 @@ func Test_newLine(t *testing.T) {
 
 	if ln.s != s {
 		t.Errorf("ln.s should be %s [actual: %s]", s, ln.s)
+	}
+
+	if ln.indent != indent(s) {
+		t.Errorf("ln.indent should be %d [actual: %d]", indent(s), ln.indent)
+	}
+}
+
+func Test_indent_no_indent(t *testing.T) {
+	s := "html"
+	expected := 0
+	actual := indent(s)
+
+	if actual != expected {
+		t.Errorf("%q's indent should be %d [actual: %d]", s, expected, actual)
+	}
+}
+
+func Test_indent_half_indent(t *testing.T) {
+	s := "   html"
+	expected := 1
+	actual := indent(s)
+
+	if actual != expected {
+		t.Errorf("%q's indent should be %d [actual: %d]", s, expected, actual)
+	}
+}
+
+func Test_indent(t *testing.T) {
+	s := "    html"
+	expected := 2
+	actual := indent(s)
+
+	if actual != expected {
+		t.Errorf("%q's indent should be %d [actual: %d]", s, expected, actual)
 	}
 }

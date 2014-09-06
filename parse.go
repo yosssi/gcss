@@ -21,20 +21,27 @@ func parse(s string) (<-chan []element, <-chan error) {
 	errc := make(chan error)
 
 	go func() {
+		var elements []element
+
 		lines := strings.Split(formatLF(s), lf)
 
 		i := 0
 		l := len(lines)
 
 		for i < l {
+			// Fetch a line.
 			ln := newLine(i+1, lines[i])
-
-			fmt.Println(ln)
-
 			i++
+
+			// Ignore the empty line.
+			if strings.TrimSpace(ln.s) == "" {
+				continue
+			}
+
+			fmt.Println(ln.s)
 		}
 
-		elemsc <- nil
+		elemsc <- elements
 	}()
 
 	return elemsc, errc

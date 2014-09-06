@@ -1,0 +1,12 @@
+.sign-up-form, .sign-in-form, .inquiry-form
+  margin-top 2rem
+  dl
+    &:not(:first-child)
+      margin-top 1rem
+    dt
+      font-weight bold
+  input[type='text'], input[type='password']
+    margin-top 0.3rem
+  input[type='submit']
+    margin-top 1rem
+    width 10rem

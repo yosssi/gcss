@@ -22,9 +22,19 @@ func parse(s string) (<-chan []element, <-chan error) {
 
 	go func() {
 		lines := strings.Split(formatLF(s), lf)
-		for _, ln := range lines {
+
+		i := 0
+		l := len(lines)
+
+		for i < l {
+			ln := newLine(i+1, lines[i])
+
 			fmt.Println(ln)
+
+			i++
 		}
+
+		elemsc <- nil
 	}()
 
 	return elemsc, errc

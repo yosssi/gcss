@@ -2,11 +2,18 @@ package gcss
 
 const unicodeSpace = 32
 
+const indentTop = 0
+
 // line represents a line of codes.
 type line struct {
 	no     int
 	s      string
 	indent int
+}
+
+// isTopIndent returns true if the line's indent is the top level.
+func (ln *line) isTopIndent() bool {
+	return ln.indent == indentTop
 }
 
 // newLine creates and returns a line.

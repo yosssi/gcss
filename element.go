@@ -1,7 +1,10 @@
 package gcss
 
+import "io"
+
 // element represents an element of GCSS source codes.
 type element interface {
+	io.WriterTo
 	AppendChild(child element)
 	Base() *elementBase
 }

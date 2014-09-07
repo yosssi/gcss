@@ -18,7 +18,7 @@ func parse(s string) (<-chan []element, <-chan error) {
 	errc := make(chan error)
 
 	go func() {
-		var elements []element
+		var elems []element
 
 		lines := strings.Split(formatLF(s), lf)
 
@@ -43,11 +43,11 @@ func parse(s string) (<-chan []element, <-chan error) {
 					return
 				}
 
-				elements = append(elements, e)
+				elems = append(elems, e)
 			}
 		}
 
-		elemsc <- elements
+		elemsc <- elems
 	}()
 
 	return elemsc, errc

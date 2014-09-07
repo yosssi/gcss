@@ -1,5 +1,7 @@
 package gcss
 
+import "strings"
+
 const unicodeSpace = 32
 
 const indentTop = 0
@@ -9,6 +11,11 @@ type line struct {
 	no     int
 	s      string
 	indent int
+}
+
+// isEmpty returns true if the line's s is zero value.
+func (ln *line) isEmpty() bool {
+	return strings.TrimSpace(ln.s) == ""
 }
 
 // isTopIndent returns true if the line's indent is the top level.

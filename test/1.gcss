@@ -40,3 +40,4 @@ input
     background-color darkgray
     &:hover, &:disabled
       background-color gray
+

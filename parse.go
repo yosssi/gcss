@@ -1,9 +1,6 @@
 package gcss
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 // Special characters
 const (
@@ -34,12 +31,16 @@ func parse(s string) (<-chan []element, <-chan error) {
 			i++
 
 			// Ignore the empty line.
-			if strings.TrimSpace(ln.s) == "" {
+			if ln.isEmpty() {
 				continue
 			}
 
 			if ln.isTopIndent() {
-				fmt.Println(ln.s)
+				e := newElement(ln, nil)
+
+				appendChildren(e, lines, &i, l)
+
+				elements = append(elements, e)
 			}
 		}
 
@@ -47,6 +48,23 @@ func parse(s string) (<-chan []element, <-chan error) {
 	}()
 
 	return elemsc, errc
+}
+
+// appendChildren parses the lines and appends the child elements
+// to the parent element.
+func appendChildren(parent element, lines []string, i *int, l int) {
+	for *i < l {
+		// Fetch a line.
+		ln := newLine(*i+1, lines[*i])
+
+		// Ignore the empty line.
+		if ln.isEmpty() {
+			*i++
+			return
+		}
+
+		*i++
+	}
 }
 
 // formatLF replaces the line feed codes with LF and

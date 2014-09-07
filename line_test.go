@@ -2,17 +2,35 @@ package gcss
 
 import "testing"
 
+func Test_line_isEmpty_true(t *testing.T) {
+	ln := newLine(1, "")
+
+	if !ln.isEmpty() {
+		t.Error("ln.Empty() should return true")
+	}
+}
+
+func Test_line_isEmpty_false(t *testing.T) {
+	ln := newLine(1, "html")
+
+	if ln.isEmpty() {
+		t.Error("ln.Empty() should return false")
+	}
+}
+
 func Test_line_isTopIndent_true(t *testing.T) {
 	ln := newLine(1, "html")
+
 	if !ln.isTopIndent() {
-		t.Error("ln.isTopIndent should return true")
+		t.Error("ln.isTopIndent() should return true")
 	}
 }
 
 func Test_line_isTopIndent_false(t *testing.T) {
 	ln := newLine(1, "  html")
+
 	if ln.isTopIndent() {
-		t.Error("ln.isTopIndent should return false")
+		t.Error("ln.isTopIndent() should return false")
 	}
 }
 

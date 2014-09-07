@@ -38,7 +38,10 @@ func parse(s string) (<-chan []element, <-chan error) {
 			if ln.isTopIndent() {
 				e := newElement(ln, nil)
 
-				appendChildren(e, lines, &i, l)
+				if err := appendChildren(e, lines, &i, l); err != nil {
+					errc <- err
+					return
+				}
 
 				elements = append(elements, e)
 			}
@@ -52,7 +55,7 @@ func parse(s string) (<-chan []element, <-chan error) {
 
 // appendChildren parses the lines and appends the child elements
 // to the parent element.
-func appendChildren(parent element, lines []string, i *int, l int) {
+func appendChildren(parent element, lines []string, i *int, l int) error {
 	for *i < l {
 		// Fetch a line.
 		ln := newLine(*i+1, lines[*i])
@@ -60,11 +63,31 @@ func appendChildren(parent element, lines []string, i *int, l int) {
 		// Ignore the empty line.
 		if ln.isEmpty() {
 			*i++
-			return
+			return nil
 		}
 
+		ok, err := ln.childOf(parent)
+
+		if err != nil {
+			return err
+		}
+
+		if !ok {
+			return nil
+		}
+
+		child := newElement(ln, parent)
+
+		parent.AppendChild(child)
+
 		*i++
+
+		if err := appendChildren(child, lines, i, l); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 // formatLF replaces the line feed codes with LF and

@@ -2,7 +2,7 @@
 .sign-up-form, .sign-in-form, .inquiry-form
   margin-top: 2rem
   dl
-    &:not(:first-child)
+      &:not(:first-child)
       margin-top; 1rem
     dt
       font-weight: bold

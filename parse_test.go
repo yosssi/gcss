@@ -5,6 +5,24 @@ import (
 	"testing"
 )
 
+func Test_parse_appendChildrenErr(t *testing.T) {
+	data, err := ioutil.ReadFile("./test/2.gcss")
+	if err != nil {
+		t.Errorf("error occurred [error: %s]", err.Error())
+	}
+
+	elemsc, errc := parse(string(data))
+
+	select {
+	case <-elemsc:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if expected, actual := "indent is invalid [line: 5]", err.Error(); actual != expected {
+			t.Errorf("err should be %q [actual: %q]", expected, actual)
+		}
+	}
+}
+
 func Test_parse(t *testing.T) {
 	data, err := ioutil.ReadFile("./test/1.gcss")
 	if err != nil {
@@ -15,7 +33,7 @@ func Test_parse(t *testing.T) {
 
 	select {
 	case <-elemsc:
-	case <-errc:
+	case err := <-errc:
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 }

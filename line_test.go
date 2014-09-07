@@ -1,6 +1,9 @@
 package gcss
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func Test_line_isEmpty_true(t *testing.T) {
 	ln := newLine(1, "")
@@ -31,6 +34,38 @@ func Test_line_isTopIndent_false(t *testing.T) {
 
 	if ln.isTopIndent() {
 		t.Error("ln.isTopIndent() should return false")
+	}
+}
+
+func Test_line_childOf_indentInvalidErr(t *testing.T) {
+	parent := newElement(newLine(1, "html"), nil)
+
+	ln := newLine(2, "    font-size: 12px")
+
+	_, err := ln.childOf(parent)
+
+	if err == nil {
+		t.Error("err should not be nil")
+	}
+
+	if expected, actual := fmt.Sprintf("indent is invalid [line: %d]", ln.no), err.Error(); actual != expected {
+		t.Errorf("err should be %q [actual: %q]", expected, actual)
+	}
+}
+
+func Test_line_childOf(t *testing.T) {
+	parent := newElement(newLine(1, "html"), nil)
+
+	ln := newLine(2, "  font-size: 12px")
+
+	ok, err := ln.childOf(parent)
+
+	if err != nil {
+		t.Errorf("err occurrd [err: %q]", err.Error())
+	}
+
+	if !ok {
+		t.Error("ok should be true")
 	}
 }
 

@@ -7,6 +7,16 @@ type elementBase struct {
 	children []element
 }
 
+// AppendChild append the child element to the element base.
+func (eBase *elementBase) AppendChild(child element) {
+	eBase.children = append(eBase.children, child)
+}
+
+// Base returns the element base.
+func (eBase *elementBase) Base() *elementBase {
+	return eBase
+}
+
 // newElementBase creates and returns an element base.
 func newElementBase(ln *line, parent element) elementBase {
 	return elementBase{

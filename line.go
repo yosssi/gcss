@@ -1,6 +1,9 @@
 package gcss
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 const unicodeSpace = 32
 
@@ -21,6 +24,20 @@ func (ln *line) isEmpty() bool {
 // isTopIndent returns true if the line's indent is the top level.
 func (ln *line) isTopIndent() bool {
 	return ln.indent == indentTop
+}
+
+func (ln *line) childOf(parent element) (bool, error) {
+	var ok bool
+	var err error
+
+	switch pIndent := parent.Base().ln.indent; {
+	case ln.indent == pIndent+1:
+		ok = true
+	case ln.indent > pIndent+1:
+		err = fmt.Errorf("indent is invalid [line: %d]", ln.no)
+	}
+
+	return ok, err
 }
 
 // newLine creates and returns a line.

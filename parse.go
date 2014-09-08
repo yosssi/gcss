@@ -14,12 +14,12 @@ const (
 // the generated elements and the last one returns
 // an error when it occurs.
 func parse(s string) (<-chan element, <-chan error) {
-	elemc := make(chan element)
+	lines := strings.Split(formatLF(s), lf)
+
+	elemc := make(chan element, len(lines))
 	errc := make(chan error)
 
 	go func() {
-		lines := strings.Split(formatLF(s), lf)
-
 		i := 0
 		l := len(lines)
 
@@ -44,6 +44,8 @@ func parse(s string) (<-chan element, <-chan error) {
 				elemc <- elem
 			}
 		}
+
+		close(elemc)
 	}()
 
 	return elemc, errc

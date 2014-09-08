@@ -13,13 +13,11 @@ const (
 // and returns the two channels: the first one returns
 // the generated elements and the last one returns
 // an error when it occurs.
-func parse(s string) (<-chan []element, <-chan error) {
-	elemsc := make(chan []element)
+func parse(s string) (<-chan element, <-chan error) {
+	elemc := make(chan element)
 	errc := make(chan error)
 
 	go func() {
-		var elems []element
-
 		lines := strings.Split(formatLF(s), lf)
 
 		i := 0
@@ -36,21 +34,19 @@ func parse(s string) (<-chan []element, <-chan error) {
 			}
 
 			if ln.isTopIndent() {
-				e := newElement(ln, nil)
+				elem := newElement(ln, nil)
 
-				if err := appendChildren(e, lines, &i, l); err != nil {
+				if err := appendChildren(elem, lines, &i, l); err != nil {
 					errc <- err
 					return
 				}
 
-				elems = append(elems, e)
+				elemc <- elem
 			}
 		}
-
-		elemsc <- elems
 	}()
 
-	return elemsc, errc
+	return elemc, errc
 }
 
 // appendChildren parses the lines and appends the child elements

@@ -11,10 +11,10 @@ func Test_parse_appendChildrenErr(t *testing.T) {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 
-	elemsc, errc := parse(string(data))
+	elemc, errc := parse(string(data))
 
 	select {
-	case <-elemsc:
+	case <-elemc:
 		t.Error("error should be occurred")
 	case err := <-errc:
 		if expected, actual := "indent is invalid [line: 5]", err.Error(); actual != expected {
@@ -29,10 +29,10 @@ func Test_parse(t *testing.T) {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 
-	elemsc, errc := parse(string(data))
+	elemc, errc := parse(string(data))
 
 	select {
-	case <-elemsc:
+	case <-elemc:
 	case err := <-errc:
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}

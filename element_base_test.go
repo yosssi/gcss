@@ -3,8 +3,15 @@ package gcss
 import "testing"
 
 func Test_elementBase_AppendChild(t *testing.T) {
-	parent := newElement(newLine(1, "html"), nil)
-	child := newElement(newLine(2, "  font-size: 12px;"), parent)
+	parent, err := newElement(newLine(1, "html"), nil)
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	child, err := newElement(newLine(2, "  font-size: 12px;"), parent)
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
 
 	parent.Base().AppendChild(child)
 
@@ -18,7 +25,10 @@ func Test_elementBase_AppendChild(t *testing.T) {
 }
 
 func Test_elementBase_Base(t *testing.T) {
-	e := newElement(newLine(1, "html"), nil)
+	e, err := newElement(newLine(1, "html"), nil)
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
 
 	if e.Base() == nil {
 		t.Error("e.Base() should not be nil")

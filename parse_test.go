@@ -1,6 +1,7 @@
 package gcss
 
 import (
+	"errors"
 	"io/ioutil"
 	"testing"
 )
@@ -21,6 +22,62 @@ func Test_parse_appendChildrenErr(t *testing.T) {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}
+}
+
+func Test_parse_newElementErr(t *testing.T) {
+	newDeclarationFuncBak := newDeclarationFunc
+
+	errMsg := "test error"
+
+	newDeclarationFunc = func(ln *line, parent element) (*declaration, error) {
+		return nil, errors.New(errMsg)
+	}
+
+	data, err := ioutil.ReadFile("./test/5.gcss")
+	if err != nil {
+		t.Errorf("error occurred [error: %s]", err.Error())
+	}
+
+	elemc, errc := parse(string(data))
+
+	select {
+	case <-elemc:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if err.Error() != errMsg {
+			t.Errorf("err should be %q [actual: %q]", errMsg, err.Error())
+		}
+	}
+
+	newDeclarationFunc = newDeclarationFuncBak
+}
+
+func Test_parse_appendChildrenNewElementErr(t *testing.T) {
+	newDeclarationFuncBak := newDeclarationFunc
+
+	errMsg := "test error"
+
+	newDeclarationFunc = func(ln *line, parent element) (*declaration, error) {
+		return nil, errors.New(errMsg)
+	}
+
+	data, err := ioutil.ReadFile("./test/6.gcss")
+	if err != nil {
+		t.Errorf("error occurred [error: %s]", err.Error())
+	}
+
+	elemc, errc := parse(string(data))
+
+	select {
+	case <-elemc:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if err.Error() != errMsg {
+			t.Errorf("err should be %q [actual: %q]", errMsg, err.Error())
+		}
+	}
+
+	newDeclarationFunc = newDeclarationFuncBak
 }
 
 func Test_parse(t *testing.T) {

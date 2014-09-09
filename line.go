@@ -26,6 +26,7 @@ func (ln *line) isTopIndent() bool {
 	return ln.indent == indentTop
 }
 
+// childOf returns true if the line is a child of the parent.
 func (ln *line) childOf(parent element) (bool, error) {
 	var ok bool
 	var err error
@@ -38,6 +39,12 @@ func (ln *line) childOf(parent element) (bool, error) {
 	}
 
 	return ok, err
+}
+
+// isDeclaration returns true if the line is a declaration.
+func (ln *line) isDeclaration() bool {
+	_, _, err := declarationPV(ln)
+	return err == nil
 }
 
 // newLine creates and returns a line.

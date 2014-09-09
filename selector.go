@@ -2,12 +2,16 @@ package gcss
 
 import "io"
 
-// selector represents a selector.
+// selector represents a selector of CSS.
 type selector struct {
 	elementBase
 }
 
+// WriteTo write the selector to the writer.
 func (sel *selector) WriteTo(w io.Writer) (n int64, err error) {
+	for _, e := range sel.children {
+		e.WriteTo(w)
+	}
 	return 0, nil
 }
 

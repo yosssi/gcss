@@ -4,9 +4,11 @@ import "strings"
 
 // Special characters
 const (
-	cr   = "\r"
-	lf   = "\n"
-	crlf = "\r\n"
+	cr    = "\r"
+	lf    = "\n"
+	crlf  = "\r\n"
+	space = " "
+	colon = ":"
 )
 
 // parse parses the string, generates the elements
@@ -34,7 +36,11 @@ func parse(s string) (<-chan element, <-chan error) {
 			}
 
 			if ln.isTopIndent() {
-				elem := newElement(ln, nil)
+				elem, err := newElement(ln, nil)
+				if err != nil {
+					errc <- err
+					return
+				}
 
 				if err := appendChildren(elem, lines, &i, l); err != nil {
 					errc <- err
@@ -74,7 +80,10 @@ func appendChildren(parent element, lines []string, i *int, l int) error {
 			return nil
 		}
 
-		child := newElement(ln, parent)
+		child, err := newElement(ln, parent)
+		if err != nil {
+			return err
+		}
 
 		parent.AppendChild(child)
 

@@ -7,7 +7,7 @@ var newDeclarationFunc = newDeclaration
 // element represents an element of GCSS source codes.
 type element interface {
 	io.WriterTo
-	AppendChild(child element)
+	AppendChild(child element) error
 	Base() *elementBase
 }
 

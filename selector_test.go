@@ -17,6 +17,22 @@ func Test_selector_WriteTo(t *testing.T) {
 	}
 }
 
+func Test_selector_AppendChild(t *testing.T) {
+	ln := newLine(1, "html")
+
+	sel := newSelector(ln, nil)
+
+	err := sel.AppendChild(nil)
+
+	if err == nil {
+		t.Error("error should be occurred")
+	}
+
+	if expected := "invalid child's type [line: 1]"; err.Error() != expected {
+		t.Errorf("err should be %q [actual: %q]", expected, err.Error())
+	}
+}
+
 func Test_newSelector(t *testing.T) {
 	ln := newLine(1, "html")
 

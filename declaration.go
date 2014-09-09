@@ -13,9 +13,14 @@ type declaration struct {
 	value    string
 }
 
-// WriteTo write the declaration to the writer.
+// WriteTo writes the declaration to the writer.
 func (dec *declaration) WriteTo(w io.Writer) (n int64, err error) {
 	return 0, nil
+}
+
+// AppendChild does nothing.
+func (dec *declaration) AppendChild(child element) error {
+	return nil
 }
 
 // declarationPV extracts a declaration property and value

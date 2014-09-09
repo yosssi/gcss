@@ -2,14 +2,8 @@ package gcss
 
 // elementBase holds the common fields of an element.
 type elementBase struct {
-	ln       *line
-	parent   element
-	children []element
-}
-
-// AppendChild append the child element to the element base.
-func (eBase *elementBase) AppendChild(child element) {
-	eBase.children = append(eBase.children, child)
+	ln     *line
+	parent element
 }
 
 // Base returns the element base.

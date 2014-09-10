@@ -71,7 +71,13 @@ func (sel *selector) AppendChild(child element) error {
 // names returns the selector names.
 func (sel *selector) names() (string, error) {
 	if sel.parent == nil {
-		return sel.name, nil
+		names := strings.Split(sel.name, comma)
+
+		for i, name := range names {
+			names[i] = strings.TrimSpace(name)
+		}
+
+		return strings.Join(names, comma), nil
 	}
 
 	bf := new(bytes.Buffer)

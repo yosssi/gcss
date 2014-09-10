@@ -1,6 +1,7 @@
 package gcss
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strings"
@@ -15,8 +16,42 @@ type selector struct {
 }
 
 // WriteTo writes the selector to the writer.
-func (sel *selector) WriteTo(w io.Writer) (n int64, err error) {
-	return 0, nil
+func (sel *selector) WriteTo(w io.Writer) (int64, error) {
+	bf := new(bytes.Buffer)
+
+	// Write the declarations.
+	if len(sel.decs) > 0 {
+		names, err := sel.names()
+
+		if err != nil {
+			return 0, err
+		}
+
+		if _, err := bf.WriteString(names + openBrace); err != nil {
+			return 0, err
+		}
+
+		for _, dec := range sel.decs {
+			if _, err := bf.WriteString(dec.property + colon + dec.value + semicolon); err != nil {
+				return 0, err
+			}
+		}
+
+		if _, err := bf.WriteString(closeBrace); err != nil {
+			return 0, err
+		}
+	}
+
+	// Write the child selectors.
+	for _, childSel := range sel.sels {
+		if _, err := childSel.WriteTo(bf); err != nil {
+			return 0, err
+		}
+	}
+
+	n, err := w.Write(bf.Bytes())
+
+	return int64(n), err
 }
 
 // AppendChild appends a selector or declaration to the selector.
@@ -31,6 +66,45 @@ func (sel *selector) AppendChild(child element) error {
 	}
 
 	return nil
+}
+
+// names returns the selector names.
+func (sel *selector) names() (string, error) {
+	if sel.parent == nil {
+		return sel.name, nil
+	}
+
+	bf := new(bytes.Buffer)
+
+	names, err := sel.parent.(*selector).names()
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, parentS := range strings.Split(names, comma) {
+		for _, s := range strings.Split(sel.name, comma) {
+			s = strings.TrimSpace(s)
+
+			if strings.HasPrefix(s, ampersand) {
+				s = strings.TrimPrefix(s, ampersand)
+			} else {
+				s = space + s
+			}
+
+			if bf.Len() > 0 {
+				if _, err := bf.WriteString(comma); err != nil {
+					return "", err
+				}
+			}
+
+			if _, err := bf.WriteString(parentS + s); err != nil {
+				return "", err
+			}
+		}
+	}
+
+	return bf.String(), nil
 }
 
 // newSelector creates and returns a selector.

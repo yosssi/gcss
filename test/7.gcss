@@ -1,0 +1,8 @@
+a,b
+  font-size: 12px
+  color: #000
+  c, d
+    color: blue
+  &:hover
+    color: red
+    font-size: 10px

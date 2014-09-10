@@ -36,7 +36,7 @@ func declarationPV(ln *line) (string, string, error) {
 		return "", "", fmt.Errorf("property should end with a colon [line: %d]", ln.no)
 	}
 
-	return pv[0], pv[1], nil
+	return strings.TrimSuffix(pv[0], colon), pv[1], nil
 }
 
 // newDeclaration creates and returns a declaration.

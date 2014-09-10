@@ -4,11 +4,16 @@ import "strings"
 
 // Special characters
 const (
-	cr    = "\r"
-	lf    = "\n"
-	crlf  = "\r\n"
-	space = " "
-	colon = ":"
+	cr         = "\r"
+	lf         = "\n"
+	crlf       = "\r\n"
+	space      = " "
+	colon      = ":"
+	comma      = ","
+	openBrace  = "{"
+	closeBrace = "}"
+	semicolon  = ";"
+	ampersand  = "&"
 )
 
 // parse parses the string, generates the elements

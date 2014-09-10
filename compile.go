@@ -29,7 +29,7 @@ func Compile(path string) (<-chan string, <-chan error) {
 			return
 		}
 
-		bc, cErrc := CompileString(string(data))
+		bc, cErrc := CompileBytes(data)
 
 		select {
 		case b := <-bc:
@@ -53,16 +53,16 @@ func Compile(path string) (<-chan string, <-chan error) {
 	return pathc, errc
 }
 
-// CompileString parses the GCSS string passed as the s parameter,
+// CompileBytes parses the GCSS string passed as the s parameter,
 // generates a CSS string and returns the two channels: the first
 // one returns the CSS string and the last one returns an error
 // when it occurs.
-func CompileString(s string) (<-chan []byte, <-chan error) {
+func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 	bc := make(chan []byte)
 	errc := make(chan error)
 
 	go func() {
-		elemc, pErrc := parse(s)
+		elemc, pErrc := parse(string(b))
 
 		bf := new(bytes.Buffer)
 
@@ -78,6 +78,8 @@ func CompileString(s string) (<-chan []byte, <-chan error) {
 				}
 
 				bc <- bf.Bytes()
+
+				return
 			case err := <-pErrc:
 				errc <- err
 				return

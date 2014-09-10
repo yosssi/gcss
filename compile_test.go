@@ -62,6 +62,19 @@ func TestCompile(t *testing.T) {
 	}
 }
 
-func TestComplieString(t *testing.T) {
-	CompileString("")
+func TestCompile_pattern2(t *testing.T) {
+	pathc, errc := Compile("test/7.gcss")
+
+	select {
+	case path := <-pathc:
+		if expected := "test/7.css"; expected != path {
+			t.Errorf("path should be %q [actual: %q]", expected, path)
+		}
+	case err := <-errc:
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+}
+
+func TestComplieBytes(t *testing.T) {
+	CompileBytes([]byte(""))
 }

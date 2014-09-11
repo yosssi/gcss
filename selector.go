@@ -36,9 +36,7 @@ func (sel *selector) WriteTo(w io.Writer) (int64, error) {
 
 	// Write the child selectors.
 	for _, childSel := range sel.sels {
-		if _, err := childSel.WriteTo(bf); err != nil {
-			return 0, err
-		}
+		childSel.WriteTo(bf)
 	}
 
 	n, err := w.Write(bf.Bytes())

@@ -20,9 +20,7 @@ const (
 // and returns the two channels: the first one returns
 // the generated elements and the last one returns
 // an error when it occurs.
-func parse(s string) (<-chan element, <-chan error) {
-	lines := strings.Split(formatLF(s), lf)
-
+func parse(lines []string) (<-chan element, <-chan error) {
 	elemc := make(chan element, len(lines))
 	errc := make(chan error)
 

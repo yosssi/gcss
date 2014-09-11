@@ -18,7 +18,7 @@ var newBufWriter = func(w io.Writer) WriteFlusher {
 	return bufio.NewWriter(w)
 }
 
-// write writes the string "s" to the CSS file.
+// write writes the input byte data to the CSS file.
 func write(path string, bc <-chan []byte, berrc <-chan error) (<-chan struct{}, <-chan error) {
 	done := make(chan struct{})
 	errc := make(chan error)

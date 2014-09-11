@@ -3,6 +3,7 @@ package gcss
 import (
 	"errors"
 	"io/ioutil"
+	"strings"
 	"testing"
 )
 
@@ -12,7 +13,7 @@ func Test_parse_appendChildrenErr(t *testing.T) {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 
-	elemc, errc := parse(string(data))
+	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
 
 	select {
 	case <-elemc:
@@ -38,7 +39,7 @@ func Test_parse_newElementErr(t *testing.T) {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 
-	elemc, errc := parse(string(data))
+	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
 
 	select {
 	case <-elemc:
@@ -66,7 +67,7 @@ func Test_parse_appendChildrenNewElementErr(t *testing.T) {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 
-	elemc, errc := parse(string(data))
+	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
 
 	select {
 	case <-elemc:
@@ -86,7 +87,7 @@ func Test_parse(t *testing.T) {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}
 
-	elemc, errc := parse(string(data))
+	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
 
 	select {
 	case <-elemc:

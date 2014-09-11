@@ -54,22 +54,22 @@ func Compile(path string) (<-chan string, <-chan error) {
 // one returns the CSS byte array and the last one returns an error
 // when it occurs.
 func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
-	bc := make(chan []byte, bcBufSize)
+	lines := strings.Split(formatLF(string(b)), lf)
+
+	bc := make(chan []byte, len(lines))
 	errc := make(chan error)
 
 	go func() {
-		elemc, pErrc := parse(string(b))
+		elemc, pErrc := parse(lines)
 
 		for {
 			select {
 			case elem, ok := <-elemc:
-				bf := new(bytes.Buffer)
-
 				if elem != nil {
+					bf := new(bytes.Buffer)
 					elem.WriteTo(bf)
+					bc <- bf.Bytes()
 				}
-
-				bc <- bf.Bytes()
 
 				if !ok {
 					close(bc)

@@ -21,25 +21,17 @@ func (sel *selector) WriteTo(w io.Writer) (int64, error) {
 
 	// Write the declarations.
 	if len(sel.decs) > 0 {
-		names, err := sel.names()
-
-		if err != nil {
-			return 0, err
-		}
-
-		if _, err := bf.WriteString(names + openBrace); err != nil {
-			return 0, err
-		}
+		bf.WriteString(sel.names())
+		bf.WriteString(openBrace)
 
 		for _, dec := range sel.decs {
-			if _, err := bf.WriteString(dec.property + colon + dec.value + semicolon); err != nil {
-				return 0, err
-			}
+			bf.WriteString(dec.property)
+			bf.WriteString(colon)
+			bf.WriteString(dec.value)
+			bf.WriteString(semicolon)
 		}
 
-		if _, err := bf.WriteString(closeBrace); err != nil {
-			return 0, err
-		}
+		bf.WriteString(closeBrace)
 	}
 
 	// Write the child selectors.
@@ -69,48 +61,40 @@ func (sel *selector) AppendChild(child element) error {
 }
 
 // names returns the selector names.
-func (sel *selector) names() (string, error) {
-	if sel.parent == nil {
-		names := strings.Split(sel.name, comma)
-
-		for i, name := range names {
-			names[i] = strings.TrimSpace(name)
-		}
-
-		return strings.Join(names, comma), nil
-	}
-
+func (sel *selector) names() string {
 	bf := new(bytes.Buffer)
 
-	names, err := sel.parent.(*selector).names()
-
-	if err != nil {
-		return "", err
-	}
-
-	for _, parentS := range strings.Split(names, comma) {
-		for _, s := range strings.Split(sel.name, comma) {
-			s = strings.TrimSpace(s)
-
-			if strings.HasPrefix(s, ampersand) {
-				s = strings.TrimPrefix(s, ampersand)
-			} else {
-				s = space + s
-			}
-
+	switch sel.parent.(type) {
+	case nil:
+		for _, name := range strings.Split(sel.name, comma) {
 			if bf.Len() > 0 {
-				if _, err := bf.WriteString(comma); err != nil {
-					return "", err
-				}
+				bf.WriteString(comma)
 			}
 
-			if _, err := bf.WriteString(parentS + s); err != nil {
-				return "", err
+			bf.WriteString(strings.TrimSpace(name))
+		}
+	case *selector:
+		for _, parentS := range strings.Split(sel.parent.(*selector).names(), comma) {
+			for _, s := range strings.Split(sel.name, comma) {
+				if bf.Len() > 0 {
+					bf.WriteString(comma)
+				}
+
+				bf.WriteString(parentS)
+
+				s = strings.TrimSpace(s)
+
+				if strings.HasPrefix(s, ampersand) {
+					bf.WriteString(strings.TrimPrefix(s, ampersand))
+				} else {
+					bf.WriteString(space)
+					bf.WriteString(s)
+				}
 			}
 		}
 	}
 
-	return bf.String(), nil
+	return bf.String()
 }
 
 // newSelector creates and returns a selector.

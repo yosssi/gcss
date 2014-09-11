@@ -63,11 +63,13 @@ func TestCompile(t *testing.T) {
 }
 
 func TestCompile_pattern2(t *testing.T) {
-	pathc, errc := Compile("test/7.gcss")
+	gcssPath := "test/7.gcss"
+
+	pathc, errc := Compile(gcssPath)
 
 	select {
 	case path := <-pathc:
-		if expected := "test/7.css"; expected != path {
+		if expected := cssFilePath(path); expected != path {
 			t.Errorf("path should be %q [actual: %q]", expected, path)
 		}
 	case err := <-errc:

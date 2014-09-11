@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const bcBufSize = 1024
+
 // cssFilePath creates and returns the CSS file path.
 var cssFilePath = func(path string) string {
 	ext := filepath.Ext(path)
@@ -29,22 +31,16 @@ func Compile(path string) (<-chan string, <-chan error) {
 			return
 		}
 
-		bc, cErrc := CompileBytes(data)
+		cssPath := cssFilePath(path)
+
+		bc, berrc := CompileBytes(data)
+
+		done, werrc := write(cssPath, bc, berrc)
 
 		select {
-		case b := <-bc:
-			cssPath := cssFilePath(path)
-
-			done, wErrc := write(cssPath, b)
-
-			select {
-			case <-done:
-				pathc <- cssPath
-			case err := <-wErrc:
-				errc <- err
-				return
-			}
-		case err := <-cErrc:
+		case <-done:
+			pathc <- cssPath
+		case err := <-werrc:
 			errc <- err
 			return
 		}
@@ -53,33 +49,32 @@ func Compile(path string) (<-chan string, <-chan error) {
 	return pathc, errc
 }
 
-// CompileBytes parses the GCSS string passed as the s parameter,
-// generates a CSS string and returns the two channels: the first
-// one returns the CSS string and the last one returns an error
+// CompileBytes parses the GCSS byte array passed as the s parameter,
+// generates a CSS byte array and returns the two channels: the first
+// one returns the CSS byte array and the last one returns an error
 // when it occurs.
 func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
-	bc := make(chan []byte)
+	bc := make(chan []byte, bcBufSize)
 	errc := make(chan error)
 
 	go func() {
 		elemc, pErrc := parse(string(b))
 
-		bf := new(bytes.Buffer)
-
 		for {
 			select {
 			case elem, ok := <-elemc:
+				bf := new(bytes.Buffer)
+
 				if elem != nil {
 					elem.WriteTo(bf)
 				}
 
-				if ok {
-					continue
-				}
-
 				bc <- bf.Bytes()
 
-				return
+				if !ok {
+					close(bc)
+					return
+				}
 			case err := <-pErrc:
 				errc <- err
 				return

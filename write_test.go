@@ -1,9 +1,38 @@
 package gcss
 
-import "testing"
+import (
+	"errors"
+	"io"
+	"testing"
+)
 
-func Test_writeErr(t *testing.T) {
-	done, errc := write("not_exist_dir/not_exit_file", nil)
+var errTest = errors.New("test error")
+
+type writeErrBufWriter struct{}
+
+func (w *writeErrBufWriter) Write(p []byte) (int, error) {
+	return 0, errTest
+}
+
+func (w *writeErrBufWriter) Flush() error {
+	return nil
+}
+
+type flushErrBufWriter struct{}
+
+func (w *flushErrBufWriter) Write(p []byte) (int, error) {
+	return 0, nil
+}
+
+func (w *flushErrBufWriter) Flush() error {
+	return errTest
+}
+
+func Test_write_err(t *testing.T) {
+	bc := make(chan []byte)
+	berrc := make(chan error)
+
+	done, errc := write("not_exist_dir/not_exit_file", bc, berrc)
 
 	select {
 	case <-done:
@@ -13,4 +42,56 @@ func Test_writeErr(t *testing.T) {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}
+}
+
+func Test_write_writeErr(t *testing.T) {
+	newBufWriterBak := newBufWriter
+
+	newBufWriter = func(w io.Writer) WriteFlusher {
+		return &writeErrBufWriter{}
+	}
+
+	bc := make(chan []byte)
+	berrc := make(chan error)
+
+	done, errc := write("test/8.gcss", bc, berrc)
+
+	bc <- []byte("test")
+
+	select {
+	case <-done:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if err != errTest {
+			t.Errorf("err should be %q [actual: %q]", errTest.Error(), err.Error())
+		}
+	}
+
+	newBufWriter = newBufWriterBak
+}
+
+func Test_write_flushErr(t *testing.T) {
+	newBufWriterBak := newBufWriter
+
+	newBufWriter = func(w io.Writer) WriteFlusher {
+		return &flushErrBufWriter{}
+	}
+
+	bc := make(chan []byte)
+	berrc := make(chan error)
+
+	done, errc := write("test/8.gcss", bc, berrc)
+
+	close(bc)
+
+	select {
+	case <-done:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if err != errTest {
+			t.Errorf("err should be %q [actual: %q]", errTest.Error(), err.Error())
+		}
+	}
+
+	newBufWriter = newBufWriterBak
 }

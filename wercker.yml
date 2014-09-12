@@ -34,6 +34,6 @@ build:
           go get github.com/axw/gocov/gocov
           go get github.com/mattn/goveralls
           echo "mode: count" > all.cov
-          packages=(.)
+          packages=(. cmd/gcss)
           for package in ${packages[@]}; do go test --covermode=count -coverprofile=$package.cov ./$package; sed -e "1d" $package.cov >> all.cov; done
           GIT_BRANCH=$WERCKER_GIT_BRANCH goveralls -coverprofile=all.cov -service=wercker.com -repotoken $COVERALLS_REPO_TOKEN

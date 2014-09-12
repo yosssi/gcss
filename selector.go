@@ -25,10 +25,8 @@ func (sel *selector) WriteTo(w io.Writer) (int64, error) {
 		bf.WriteString(openBrace)
 
 		for _, dec := range sel.decs {
-			bf.WriteString(dec.property)
-			bf.WriteString(colon)
-			bf.WriteString(dec.value)
-			bf.WriteString(semicolon)
+			// Writing to the bytes.Buffer never returns an error.
+			dec.WriteTo(bf)
 		}
 
 		bf.WriteString(closeBrace)

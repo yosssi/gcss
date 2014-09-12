@@ -1,6 +1,7 @@
 package gcss
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strings"
@@ -14,8 +15,17 @@ type declaration struct {
 }
 
 // WriteTo writes the declaration to the writer.
-func (dec *declaration) WriteTo(w io.Writer) (n int64, err error) {
-	return 0, nil
+func (dec *declaration) WriteTo(w io.Writer) (int64, error) {
+	bf := new(bytes.Buffer)
+
+	bf.WriteString(dec.property)
+	bf.WriteString(colon)
+	bf.WriteString(dec.value)
+	bf.WriteString(semicolon)
+
+	n, err := w.Write(bf.Bytes())
+
+	return int64(n), err
 }
 
 // AppendChild does nothing.

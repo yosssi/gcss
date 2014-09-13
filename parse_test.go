@@ -19,7 +19,7 @@ func Test_parse_topNewElementErr(t *testing.T) {
 	case <-elemc:
 		t.Error("error should be occurred")
 	case err := <-errc:
-		if expected, actual := "selector must not end with \"{\"", err.Error(); actual != expected {
+		if expected, actual := "selector must not end with \"{\" [line: 1]", err.Error(); actual != expected {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}
@@ -38,7 +38,7 @@ func Test_parse_AppendChildrenNewElementErr(t *testing.T) {
 	case <-elemc:
 		t.Error("error should be occurred")
 	case err := <-errc:
-		if expected, actual := "declaration must not end with \";\"", err.Error(); actual != expected {
+		if expected, actual := "declaration must not end with \";\" [line: 2]", err.Error(); actual != expected {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}

@@ -15,6 +15,7 @@ const (
 	semicolon  = ";"
 	ampersand  = "&"
 	atMark     = "@"
+	dollarMark = "$"
 )
 
 // parse parses the string, generates the elements

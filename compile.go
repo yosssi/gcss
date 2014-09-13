@@ -60,12 +60,19 @@ func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 	errc := make(chan error)
 
 	go func() {
+		ctx := newContext()
+
 		elemc, pErrc := parse(lines)
 
 		for {
 			select {
 			case elem, ok := <-elemc:
-				if elem != nil {
+				switch elem.(type) {
+				case *variable:
+					v := elem.(*variable)
+					ctx.vars[v.name] = v
+				case *atRule, *declaration, *selector:
+					elem.SetContext(ctx)
 					bf := new(bytes.Buffer)
 					elem.WriteTo(bf)
 					bc <- bf.Bytes()

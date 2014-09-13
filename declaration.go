@@ -20,7 +20,17 @@ func (dec *declaration) WriteTo(w io.Writer) (int64, error) {
 
 	bf.WriteString(dec.property)
 	bf.WriteString(colon)
-	bf.WriteString(dec.value)
+
+	if strings.HasPrefix(dec.value, dollarMark) {
+		v, ok := dec.Context().vars[strings.TrimPrefix(dec.value, dollarMark)]
+		if ok {
+			// Writing to the bytes.Buffer never returns an error.
+			v.WriteTo(bf)
+		}
+	} else {
+		bf.WriteString(dec.value)
+	}
+
 	bf.WriteString(semicolon)
 
 	n, err := w.Write(bf.Bytes())
@@ -53,7 +63,7 @@ func newDeclaration(ln *line, parent element) (*declaration, error) {
 	}
 
 	if strings.HasSuffix(value, semicolon) {
-		return nil, fmt.Errorf("declaration must not end with %q", semicolon)
+		return nil, fmt.Errorf("declaration must not end with %q [line: %d]", semicolon, ln.no)
 	}
 
 	return &declaration{

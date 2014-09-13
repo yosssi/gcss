@@ -8,9 +8,10 @@ type elementBase struct {
 	parent element
 	sels   []*selector
 	decs   []*declaration
+	ctx    *context
 }
 
-// AppendChild appends a selector or declaration to the selector.
+// AppendChild appends a child element to the element.
 func (eBase *elementBase) AppendChild(child element) error {
 	switch child.(type) {
 	case *selector:
@@ -27,6 +28,20 @@ func (eBase *elementBase) AppendChild(child element) error {
 // Base returns the element base.
 func (eBase *elementBase) Base() *elementBase {
 	return eBase
+}
+
+// SetContext sets the context to the element.
+func (eBase *elementBase) SetContext(ctx *context) {
+	eBase.ctx = ctx
+}
+
+// Context returns the top element's context.
+func (eBase *elementBase) Context() *context {
+	if eBase.parent != nil {
+		return eBase.parent.Context()
+	}
+
+	return eBase.ctx
 }
 
 // newElementBase creates and returns an element base.

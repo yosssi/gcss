@@ -77,6 +77,22 @@ func Test_line_childOf(t *testing.T) {
 	}
 }
 
+func Test_line_isVariable_false(t *testing.T) {
+	ln := newLine(1, "html")
+
+	if ln.isVariable() {
+		t.Error("ln.isVariable() should return false")
+	}
+}
+
+func Test_line_isVariable_true(t *testing.T) {
+	ln := newLine(1, "$html: test")
+
+	if !ln.isVariable() {
+		t.Error("ln.isVariable() should return true")
+	}
+}
+
 func Test_newLine(t *testing.T) {
 	no := 1
 	s := "  html"

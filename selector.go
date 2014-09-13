@@ -83,11 +83,11 @@ func newSelector(ln *line, parent element) (*selector, error) {
 	name := strings.TrimSpace(ln.s)
 
 	if strings.HasSuffix(name, openBrace) {
-		return nil, fmt.Errorf("selector must not end with %q", openBrace)
+		return nil, fmt.Errorf("selector must not end with %q [line: %d]", openBrace, ln.no)
 	}
 
 	if strings.HasSuffix(name, closeBrace) {
-		return nil, fmt.Errorf("selector must not end with %q", closeBrace)
+		return nil, fmt.Errorf("selector must not end with %q [line: %d]", closeBrace, ln.no)
 	}
 
 	return &selector{

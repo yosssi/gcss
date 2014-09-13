@@ -30,7 +30,7 @@ func Test_newDeclaration_semicolonSuffixErr(t *testing.T) {
 		t.Error("error should be occurred")
 	}
 
-	if expected := "declaration must not end with \";\""; expected != err.Error() {
+	if expected := "declaration must not end with \";\" [line: 1]"; expected != err.Error() {
 		t.Errorf("err should be %q [actual: %q]", expected, err.Error())
 	}
 }

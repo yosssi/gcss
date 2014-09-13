@@ -50,7 +50,7 @@ func Test_newSelector_suffixCloseBraceErr(t *testing.T) {
 		t.Error("error should be occurred")
 	}
 
-	if expected := "selector must not end with \"}\""; err.Error() != expected {
+	if expected := "selector must not end with \"}\" [line: 1]"; err.Error() != expected {
 		t.Errorf("err should be %q [actual: %q]", expected, err.Error())
 	}
 }

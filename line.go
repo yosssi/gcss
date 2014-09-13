@@ -53,6 +53,12 @@ func (ln *line) isAtRule() bool {
 	return strings.HasPrefix(strings.TrimSpace(ln.s), atMark)
 }
 
+// isVariable returns true if the line is a variable.
+func (ln *line) isVariable() bool {
+	_, _, err := variableNV(ln)
+	return err == nil
+}
+
 // newLine creates and returns a line.
 func newLine(no int, s string) *line {
 	return &line{

@@ -2,8 +2,6 @@ package gcss
 
 import "io"
 
-var newDeclarationFunc = newDeclaration
-
 // element represents an element of GCSS source codes.
 type element interface {
 	io.WriterTo
@@ -12,21 +10,20 @@ type element interface {
 }
 
 // newElement creates and returns an element.
-func newElement(ln *line, parent element) (element, error) {
+func newElement(ln *line, parent element) element {
 	var e element
-	var err error
 
 	switch {
 	case ln.isAtRule():
 		e = newAtRule(ln, parent)
 	case ln.isDeclaration():
-		e, err = newDeclarationFunc(ln, parent)
-		if err != nil {
-			return nil, err
-		}
+		// newDeclaration never returns an error in this context
+		// because ln is a valid declaration by executing
+		// `ln.isDeclaration()` beforehand.
+		e, _ = newDeclaration(ln, parent)
 	default:
 		e = newSelector(ln, parent)
 	}
 
-	return e, nil
+	return e
 }

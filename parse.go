@@ -40,11 +40,7 @@ func parse(lines []string) (<-chan element, <-chan error) {
 			}
 
 			if ln.isTopIndent() {
-				elem, err := newElement(ln, nil)
-				if err != nil {
-					errc <- err
-					return
-				}
+				elem := newElement(ln, nil)
 
 				if err := appendChildren(elem, lines, &i, l); err != nil {
 					errc <- err
@@ -84,10 +80,7 @@ func appendChildren(parent element, lines []string, i *int, l int) error {
 			return nil
 		}
 
-		child, err := newElement(ln, parent)
-		if err != nil {
-			return err
-		}
+		child := newElement(ln, parent)
 
 		parent.AppendChild(child)
 

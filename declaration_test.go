@@ -5,20 +5,6 @@ import (
 	"testing"
 )
 
-func Test_declaration_AppendChild(t *testing.T) {
-	ln := newLine(1, "font-size: 12px")
-
-	dec, err := newDeclaration(ln, nil)
-
-	if err != nil {
-		t.Errorf("error occurred [error: %q]", err.Error())
-	}
-
-	if err := dec.AppendChild(nil); err != nil {
-		t.Errorf("error occurred [error: %q]", err.Error())
-	}
-}
-
 func Test_declaration_WriteTo(t *testing.T) {
 	ln := newLine(1, "font-size: 12px")
 

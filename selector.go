@@ -2,7 +2,6 @@ package gcss
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"strings"
 )
@@ -11,8 +10,6 @@ import (
 type selector struct {
 	elementBase
 	name string
-	sels []*selector
-	decs []*declaration
 }
 
 // WriteTo writes the selector to the writer.
@@ -41,20 +38,6 @@ func (sel *selector) WriteTo(w io.Writer) (int64, error) {
 	n, err := w.Write(bf.Bytes())
 
 	return int64(n), err
-}
-
-// AppendChild appends a selector or declaration to the selector.
-func (sel *selector) AppendChild(child element) error {
-	switch child.(type) {
-	case *selector:
-		sel.sels = append(sel.sels, child.(*selector))
-	case *declaration:
-		sel.decs = append(sel.decs, child.(*declaration))
-	default:
-		return fmt.Errorf("invalid child's type [line: %d]", sel.ln.no)
-	}
-
-	return nil
 }
 
 // names returns the selector names.

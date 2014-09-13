@@ -28,11 +28,6 @@ func (dec *declaration) WriteTo(w io.Writer) (int64, error) {
 	return int64(n), err
 }
 
-// AppendChild does nothing.
-func (dec *declaration) AppendChild(child element) error {
-	return nil
-}
-
 // declarationPV extracts a declaration property and value
 // from the line.
 func declarationPV(ln *line) (string, string, error) {

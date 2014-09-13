@@ -17,6 +17,18 @@
   body
     padding: 1in
     border: 0.5pt solid #666
+@media print
+  a
+    font-size: 12px
+    &:hover
+      color: red
+  span
+    font-size: 10px
+    div
+      color: blue
+      &:hover
+        display: none
+        height: 0
 
 @page
   margin: 2.5cm

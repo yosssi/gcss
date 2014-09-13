@@ -45,7 +45,7 @@ func (sel *selector) names() string {
 	bf := new(bytes.Buffer)
 
 	switch sel.parent.(type) {
-	case nil:
+	case nil, *atRule:
 		for _, name := range strings.Split(sel.name, comma) {
 			if bf.Len() > 0 {
 				bf.WriteString(comma)

@@ -17,6 +17,8 @@ func newElement(ln *line, parent element) (element, error) {
 	var err error
 
 	switch {
+	case ln.isAtRule():
+		e = newAtRule(ln, parent)
 	case ln.isDeclaration():
 		e, err = newDeclarationFunc(ln, parent)
 		if err != nil {

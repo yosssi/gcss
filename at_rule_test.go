@@ -15,6 +15,16 @@ func Test_atRule_WriteTo(t *testing.T) {
 	}
 }
 
+func Test_atRule_WriteTo_fromFile(t *testing.T) {
+	pathc, errc := Compile("test/9.gcss")
+
+	select {
+	case <-pathc:
+	case err := <-errc:
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+}
+
 func Test_newAtRule(t *testing.T) {
 	ln := newLine(1, "html")
 

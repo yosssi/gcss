@@ -14,6 +14,7 @@ const (
 	closeBrace = "}"
 	semicolon  = ";"
 	ampersand  = "&"
+	atMark     = "@"
 )
 
 // parse parses the string, generates the elements

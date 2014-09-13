@@ -47,6 +47,12 @@ func (ln *line) isDeclaration() bool {
 	return err == nil
 }
 
+// isAtRule returns true if the line is an at-rule.
+func (ln *line) isAtRule() bool {
+	//fmt.Println(ln.s)
+	return strings.HasPrefix(strings.TrimSpace(ln.s), atMark)
+}
+
 // newLine creates and returns a line.
 func newLine(no int, s string) *line {
 	return &line{

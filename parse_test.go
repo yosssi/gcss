@@ -6,10 +6,49 @@ import (
 	"testing"
 )
 
-func Test_parse_appendChildrenErr(t *testing.T) {
-	data, err := ioutil.ReadFile("./test/2.gcss")
+func Test_parse_topNewElementErr(t *testing.T) {
+	data, err := ioutil.ReadFile("./test/0011.gcss")
+
 	if err != nil {
-		t.Errorf("error occurred [error: %s]", err.Error())
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
+
+	select {
+	case <-elemc:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if expected, actual := "selector must not end with \"{\"", err.Error(); actual != expected {
+			t.Errorf("err should be %q [actual: %q]", expected, actual)
+		}
+	}
+}
+
+func Test_parse_AppendChildrenNewElementErr(t *testing.T) {
+	data, err := ioutil.ReadFile("./test/0012.gcss")
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
+
+	select {
+	case <-elemc:
+		t.Error("error should be occurred")
+	case err := <-errc:
+		if expected, actual := "declaration must not end with \";\"", err.Error(); actual != expected {
+			t.Errorf("err should be %q [actual: %q]", expected, actual)
+		}
+	}
+}
+
+func Test_parse_appendChildrenErr(t *testing.T) {
+	data, err := ioutil.ReadFile("./test/0002.gcss")
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
 	}
 
 	elemc, errc := parse(strings.Split(formatLF(string(data)), lf))
@@ -25,7 +64,7 @@ func Test_parse_appendChildrenErr(t *testing.T) {
 }
 
 func Test_parse(t *testing.T) {
-	data, err := ioutil.ReadFile("./test/1.gcss")
+	data, err := ioutil.ReadFile("./test/0001.gcss")
 	if err != nil {
 		t.Errorf("error occurred [error: %s]", err.Error())
 	}

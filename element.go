@@ -10,20 +10,17 @@ type element interface {
 }
 
 // newElement creates and returns an element.
-func newElement(ln *line, parent element) element {
+func newElement(ln *line, parent element) (element, error) {
 	var e element
-
+	var err error
 	switch {
 	case ln.isAtRule():
 		e = newAtRule(ln, parent)
 	case ln.isDeclaration():
-		// newDeclaration never returns an error in this context
-		// because ln is a valid declaration by executing
-		// `ln.isDeclaration()` beforehand.
-		e, _ = newDeclaration(ln, parent)
+		e, err = newDeclaration(ln, parent)
 	default:
-		e = newSelector(ln, parent)
+		e, err = newSelector(ln, parent)
 	}
 
-	return e
+	return e, err
 }

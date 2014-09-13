@@ -38,11 +38,15 @@ func Test_line_isTopIndent_false(t *testing.T) {
 }
 
 func Test_line_childOf_indentInvalidErr(t *testing.T) {
-	parent := newElement(newLine(1, "html"), nil)
+	parent, err := newElement(newLine(1, "html"), nil)
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
 
 	ln := newLine(2, "    font-size: 12px")
 
-	_, err := ln.childOf(parent)
+	_, err = ln.childOf(parent)
 
 	if err == nil {
 		t.Error("err should not be nil")
@@ -54,14 +58,18 @@ func Test_line_childOf_indentInvalidErr(t *testing.T) {
 }
 
 func Test_line_childOf(t *testing.T) {
-	parent := newElement(newLine(1, "html"), nil)
+	parent, err := newElement(newLine(1, "html"), nil)
+
+	if err != nil {
+		t.Errorf("error occurrd [error: %q]", err.Error())
+	}
 
 	ln := newLine(2, "  font-size: 12px")
 
 	ok, err := ln.childOf(parent)
 
 	if err != nil {
-		t.Errorf("err occurrd [err: %q]", err.Error())
+		t.Errorf("error occurrd [error: %q]", err.Error())
 	}
 
 	if !ok {

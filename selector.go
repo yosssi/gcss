@@ -2,6 +2,7 @@ package gcss
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"strings"
 )
@@ -78,9 +79,19 @@ func (sel *selector) names() string {
 }
 
 // newSelector creates and returns a selector.
-func newSelector(ln *line, parent element) *selector {
+func newSelector(ln *line, parent element) (*selector, error) {
+	name := strings.TrimSpace(ln.s)
+
+	if strings.HasSuffix(name, openBrace) {
+		return nil, fmt.Errorf("selector must not end with %q", openBrace)
+	}
+
+	if strings.HasSuffix(name, closeBrace) {
+		return nil, fmt.Errorf("selector must not end with %q", closeBrace)
+	}
+
 	return &selector{
 		elementBase: newElementBase(ln, parent),
-		name:        strings.TrimSpace(ln.s),
-	}
+		name:        name,
+	}, nil
 }

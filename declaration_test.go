@@ -21,6 +21,20 @@ func Test_declaration_WriteTo(t *testing.T) {
 	}
 }
 
+func Test_newDeclaration_semicolonSuffixErr(t *testing.T) {
+	ln := newLine(1, "color: blue;")
+
+	_, err := newDeclaration(ln, nil)
+
+	if err == nil {
+		t.Error("error should be occurred")
+	}
+
+	if expected := "declaration must not end with \";\""; expected != err.Error() {
+		t.Errorf("err should be %q [actual: %q]", expected, err.Error())
+	}
+}
+
 func Test_newDeclaration(t *testing.T) {
 	ln := newLine(1, "html")
 

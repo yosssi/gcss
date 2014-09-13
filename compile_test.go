@@ -16,7 +16,7 @@ func TestCompile_readFileErr(t *testing.T) {
 }
 
 func TestCompile_compileStringErr(t *testing.T) {
-	pathc, errc := Compile("test/4.gcss")
+	pathc, errc := Compile("test/0004.gcss")
 
 	select {
 	case <-pathc:
@@ -35,7 +35,7 @@ func TestCompile_writeErr(t *testing.T) {
 		return "not_exist_dir/not_exit_file"
 	}
 
-	pathc, errc := Compile("test/3.gcss")
+	pathc, errc := Compile("test/0003.gcss")
 
 	select {
 	case <-pathc:
@@ -50,11 +50,11 @@ func TestCompile_writeErr(t *testing.T) {
 }
 
 func TestCompile(t *testing.T) {
-	pathc, errc := Compile("test/3.gcss")
+	pathc, errc := Compile("test/0003.gcss")
 
 	select {
 	case path := <-pathc:
-		if expected := "test/3.css"; expected != path {
+		if expected := "test/0003.css"; expected != path {
 			t.Errorf("path should be %q [actual: %q]", expected, path)
 		}
 	case err := <-errc:
@@ -63,7 +63,7 @@ func TestCompile(t *testing.T) {
 }
 
 func TestCompile_pattern2(t *testing.T) {
-	gcssPath := "test/7.gcss"
+	gcssPath := "test/0007.gcss"
 
 	pathc, errc := Compile(gcssPath)
 

@@ -3,7 +3,11 @@ package gcss
 import "testing"
 
 func Test_elementBase_Base(t *testing.T) {
-	e := newElement(newLine(1, "html"), nil)
+	e, err := newElement(newLine(1, "html"), nil)
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
 
 	if e.Base() == nil {
 		t.Error("e.Base() should not be nil")

@@ -52,6 +52,10 @@ func newDeclaration(ln *line, parent element) (*declaration, error) {
 		return nil, err
 	}
 
+	if strings.HasSuffix(value, semicolon) {
+		return nil, fmt.Errorf("declaration must not end with %q", semicolon)
+	}
+
 	return &declaration{
 		elementBase: newElementBase(ln, parent),
 		property:    property,

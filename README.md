@@ -14,4 +14,4 @@ $ go get -u github.com/yosssi/gcss/...
 
 ## Compile from the Command-Line
 
-## Integrate with a Web Application
+## Integrate with Web Applications

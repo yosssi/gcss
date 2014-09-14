@@ -9,9 +9,9 @@
 ## Installation
 
 ```sh
-$ go get -u github.com/yosssi/gcss
+$ go get -u github.com/yosssi/gcss/...
 ```
 
-## Command-Line Tool
+## Compile from the Command-Line
 
-## Related Projects
+## Integrate with a Web Application

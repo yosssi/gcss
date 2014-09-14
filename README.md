@@ -6,6 +6,12 @@
 
 ## Overview
 
+## Installation
+
+```sh
+$ go get -u github.com/yosssi/gcss
+```
+
 ## Command-Line Tool
 
 ## Related Projects

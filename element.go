@@ -19,6 +19,10 @@ func newElement(ln *line, parent element) (element, error) {
 	switch {
 	case ln.isAtRule():
 		e = newAtRule(ln, parent)
+	case ln.isMixinDeclaration():
+		// error can be ignored becuase the line is checked beforehand
+		// by calling `ln.isMixinDeclaration()`.
+		e, _ = newMixinDeclaration(ln, parent)
 	case ln.isVariable():
 		e, err = newVariable(ln, parent)
 	case ln.isDeclaration():

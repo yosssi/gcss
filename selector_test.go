@@ -33,7 +33,7 @@ func Test_selector_AppendChild(t *testing.T) {
 	err = sel.AppendChild(nil)
 
 	if err == nil {
-		t.Error("error should be occurred")
+		t.Error("error should occur")
 	}
 
 	if expected := "invalid child's type [line: 1]"; err.Error() != expected {

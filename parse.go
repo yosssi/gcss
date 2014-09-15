@@ -4,18 +4,20 @@ import "strings"
 
 // Special characters
 const (
-	cr         = "\r"
-	lf         = "\n"
-	crlf       = "\r\n"
-	space      = " "
-	colon      = ":"
-	comma      = ","
-	openBrace  = "{"
-	closeBrace = "}"
-	semicolon  = ";"
-	ampersand  = "&"
-	atMark     = "@"
-	dollarMark = "$"
+	cr               = "\r"
+	lf               = "\n"
+	crlf             = "\r\n"
+	space            = " "
+	colon            = ":"
+	comma            = ","
+	openBrace        = "{"
+	closeBrace       = "}"
+	semicolon        = ";"
+	ampersand        = "&"
+	atMark           = "@"
+	dollarMark       = "$"
+	openParenthesis  = "("
+	closeParenthesis = ")"
 )
 
 // parse parses the string, generates the elements

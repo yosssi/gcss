@@ -55,7 +55,23 @@ func (ln *line) isAtRule() bool {
 
 // isVariable returns true if the line is a variable.
 func (ln *line) isVariable() bool {
+	if !ln.isTopIndent() {
+		return false
+	}
+
 	_, _, err := variableNV(ln)
+
+	return err == nil
+}
+
+// isMixinDeclaration returns true if the line is a mixin declaration.
+func (ln *line) isMixinDeclaration() bool {
+	if !ln.isTopIndent() {
+		return false
+	}
+
+	_, _, err := mixinDeclarationNP(ln)
+
 	return err == nil
 }
 

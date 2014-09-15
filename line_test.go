@@ -85,11 +85,43 @@ func Test_line_isVariable_false(t *testing.T) {
 	}
 }
 
+func Test_line_isVariable_false_notTopIndent(t *testing.T) {
+	ln := newLine(1, "  $html: test")
+
+	if ln.isVariable() {
+		t.Error("ln.isVariable() should return false")
+	}
+}
+
 func Test_line_isVariable_true(t *testing.T) {
 	ln := newLine(1, "$html: test")
 
 	if !ln.isVariable() {
 		t.Error("ln.isVariable() should return true")
+	}
+}
+
+func Test_line_isMixinDeclaration_false_notTopIndent(t *testing.T) {
+	ln := newLine(1, "  $test($param1, $param2)")
+
+	if ln.isMixinDeclaration() {
+		t.Error("ln.isMixinDeclaration() should return false")
+	}
+}
+
+func Test_line_isMixinDeclaration_false(t *testing.T) {
+	ln := newLine(1, "html")
+
+	if ln.isMixinDeclaration() {
+		t.Error("ln.isMixinDeclaration() should return false")
+	}
+}
+
+func Test_line_isMixinDeclaration_true(t *testing.T) {
+	ln := newLine(1, "$test($param1, $param2)")
+
+	if !ln.isMixinDeclaration() {
+		t.Error("ln.isMixinDeclaration() should return true")
 	}
 }
 

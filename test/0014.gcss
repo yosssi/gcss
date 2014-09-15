@@ -1,0 +1,7 @@
+$test($param1, $param2)
+  font-size: $param1
+  color: $param2
+
+html
+  body
+    $test(12px, blue)

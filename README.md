@@ -12,7 +12,7 @@
 $ go get -u github.com/yosssi/gcss/...
 ```
 
-## Compile GCSS files from the Command-Line
+## Compile from the Command-Line
 
 ## Integrate with Web Applications
 

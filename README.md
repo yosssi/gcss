@@ -12,6 +12,8 @@
 $ go get -u github.com/yosssi/gcss/...
 ```
 
-## Compile from the Command-Line
+## Compile GCSS files from the Command-Line
 
 ## Integrate with Web Applications
+
+## Syntax Highlighters

@@ -16,4 +16,4 @@ $ go get -u github.com/yosssi/gcss/...
 
 ## Integrate with Web Applications
 
-## Syntax Highlighters
+## Syntax Highlightings

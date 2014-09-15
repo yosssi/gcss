@@ -18,13 +18,12 @@ func (md *mixinDeclaration) WriteTo(w io.Writer) (int64, error) {
 	return 0, nil
 }
 
-// mixinDeclarationNP extracts a mixin name and parameter names
-// from the line.
-func mixinDeclarationNP(ln *line) (string, []string, error) {
+// mixinNP extracts a mixin name and parameters from the line.
+func mixinNP(ln *line, isDeclaration bool) (string, []string, error) {
 	s := strings.TrimSpace(ln.s)
 
 	if !strings.HasPrefix(s, dollarMark) {
-		return "", nil, fmt.Errorf("mixin declaration must start with %q [line: %d]", dollarMark, ln.no)
+		return "", nil, fmt.Errorf("mixin must start with %q [line: %d]", dollarMark, ln.no)
 	}
 
 	s = strings.TrimPrefix(s, dollarMark)
@@ -32,43 +31,43 @@ func mixinDeclarationNP(ln *line) (string, []string, error) {
 	np := strings.Split(s, openParenthesis)
 
 	if len(np) != 2 {
-		return "", nil, fmt.Errorf("mixin declaration's format is invalid [line: %d]", ln.no)
+		return "", nil, fmt.Errorf("mixin's format is invalid [line: %d]", ln.no)
 	}
 
-	paramNamesS := strings.TrimSpace(np[1])
+	paramsS := strings.TrimSpace(np[1])
 
-	if !strings.HasSuffix(paramNamesS, closeParenthesis) {
-		return "", nil, fmt.Errorf("mixin declaration must end with %q [line: %d]", closeParenthesis, ln.no)
+	if !strings.HasSuffix(paramsS, closeParenthesis) {
+		return "", nil, fmt.Errorf("mixin must end with %q [line: %d]", closeParenthesis, ln.no)
 	}
 
-	paramNamesS = strings.TrimSuffix(paramNamesS, closeParenthesis)
+	paramsS = strings.TrimSuffix(paramsS, closeParenthesis)
 
-	if strings.Index(paramNamesS, closeParenthesis) != -1 {
-		return "", nil, fmt.Errorf("mixin declaration's format is invalid [line: %d]", ln.no)
+	if strings.Index(paramsS, closeParenthesis) != -1 {
+		return "", nil, fmt.Errorf("mixin's format is invalid [line: %d]", ln.no)
 	}
 
-	var paramNames []string
+	var params []string
 
-	if paramNamesS != "" {
-		paramNames = strings.Split(paramNamesS, comma)
+	if paramsS != "" {
+		params = strings.Split(paramsS, comma)
 	}
 
-	for i, paramName := range paramNames {
-		paramName = strings.TrimSpace(paramName)
+	for i, p := range params {
+		p = strings.TrimSpace(p)
 
-		if !strings.HasPrefix(paramName, dollarMark) {
-			return "", nil, fmt.Errorf("mixin declaration's parameter must start with %q [line: %d]", dollarMark, ln.no)
+		if isDeclaration && !strings.HasPrefix(p, dollarMark) {
+			return "", nil, fmt.Errorf("mixin's parameter must start with %q [line: %d]", dollarMark, ln.no)
 		}
 
-		paramNames[i] = strings.TrimPrefix(paramName, dollarMark)
+		params[i] = strings.TrimPrefix(p, dollarMark)
 	}
 
-	return np[0], paramNames, nil
+	return np[0], params, nil
 }
 
 // newMixinDeclaration creates and returns a mixin declaration.
 func newMixinDeclaration(ln *line, parent element) (*mixinDeclaration, error) {
-	name, paramNames, err := mixinDeclarationNP(ln)
+	name, paramNames, err := mixinNP(ln, true)
 
 	if err != nil {
 		return nil, err

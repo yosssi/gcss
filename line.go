@@ -70,7 +70,18 @@ func (ln *line) isMixinDeclaration() bool {
 		return false
 	}
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
+
+	return err == nil
+}
+
+// isMixinInvocation returns true if the line is a mixin invocation.
+func (ln *line) isMixinInvocation() bool {
+	if ln.isTopIndent() {
+		return false
+	}
+
+	_, _, err := mixinNP(ln, false)
 
 	return err == nil
 }

@@ -68,6 +68,9 @@ func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 			select {
 			case elem, ok := <-elemc:
 				switch elem.(type) {
+				case *mixinDeclaration:
+					v := elem.(*mixinDeclaration)
+					ctx.mixins[v.name] = v
 				case *variable:
 					v := elem.(*variable)
 					ctx.vars[v.name] = v

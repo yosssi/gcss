@@ -14,95 +14,97 @@ func Test_mixinDeclaration_WriteTo(t *testing.T) {
 		t.Errorf("error occurred [error: %q]", err.Error())
 	}
 
-	md.WriteTo(ioutil.Discard)
+	if _, err := md.WriteTo(ioutil.Discard); err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP_errPrefixDollar(t *testing.T) {
+func Test_mixinDeclaration_mixinNP_errPrefixDollar(t *testing.T) {
 	ln := newLine(1, "test()")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err == nil {
 		t.Error("error should occur")
 	}
 
-	if expected, actual := "mixin declaration must start with \"$\" [line: 1]", err.Error(); actual != expected {
+	if expected, actual := "mixin must start with \"$\" [line: 1]", err.Error(); actual != expected {
 		t.Errorf("error should be %q [actual: %q]", expected, actual)
 	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP_errNoOpenParenthesis(t *testing.T) {
+func Test_mixinDeclaration_mixinNP_errNoOpenParenthesis(t *testing.T) {
 	ln := newLine(1, "$test")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err == nil {
 		t.Error("error should occur")
 	}
 
-	if expected, actual := "mixin declaration's format is invalid [line: 1]", err.Error(); actual != expected {
+	if expected, actual := "mixin's format is invalid [line: 1]", err.Error(); actual != expected {
 		t.Errorf("error should be %q [actual: %q]", expected, actual)
 	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP_errNoCloseParenthesis(t *testing.T) {
+func Test_mixinDeclaration_mixinNP_errNoCloseParenthesis(t *testing.T) {
 	ln := newLine(1, "$test(")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err == nil {
 		t.Error("error should occur")
 	}
 
-	if expected, actual := "mixin declaration must end with \")\" [line: 1]", err.Error(); actual != expected {
+	if expected, actual := "mixin must end with \")\" [line: 1]", err.Error(); actual != expected {
 		t.Errorf("error should be %q [actual: %q]", expected, actual)
 	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP_errMultiCloseParentheses(t *testing.T) {
+func Test_mixinDeclaration_mixinNP_errMultiCloseParentheses(t *testing.T) {
 	ln := newLine(1, "$test())")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err == nil {
 		t.Error("error should occur")
 	}
 
-	if expected, actual := "mixin declaration's format is invalid [line: 1]", err.Error(); actual != expected {
+	if expected, actual := "mixin's format is invalid [line: 1]", err.Error(); actual != expected {
 		t.Errorf("error should be %q [actual: %q]", expected, actual)
 	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP_noParamNames(t *testing.T) {
+func Test_mixinDeclaration_mixinNP_noParamNames(t *testing.T) {
 	ln := newLine(1, "$test()")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err != nil {
 		t.Errorf("error occurred [error: %q]", err.Error())
 	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP(t *testing.T) {
+func Test_mixinDeclaration_mixinNP(t *testing.T) {
 	ln := newLine(1, "$test($param1)")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err != nil {
 		t.Errorf("error occurred [error: %q]", err.Error())
 	}
 }
 
-func Test_mixinDeclaration_mixinDeclarationNP_errInvalidParamNames(t *testing.T) {
+func Test_mixinDeclaration_mixinNP_errInvalidParamNames(t *testing.T) {
 	ln := newLine(1, "$test(param1)")
 
-	_, _, err := mixinDeclarationNP(ln)
+	_, _, err := mixinNP(ln, true)
 
 	if err == nil {
 		t.Error("error should occur")
 	}
 
-	if expected, actual := "mixin declaration's parameter must start with \"$\" [line: 1]", err.Error(); actual != expected {
+	if expected, actual := "mixin's parameter must start with \"$\" [line: 1]", err.Error(); actual != expected {
 		t.Errorf("error should be %q [actual: %q]", expected, actual)
 	}
 }
@@ -126,7 +128,7 @@ func Test_newMixinDeclaration_errInvalidParamNames(t *testing.T) {
 		t.Error("error should occur")
 	}
 
-	if expected, actual := "mixin declaration's parameter must start with \"$\" [line: 1]", err.Error(); actual != expected {
+	if expected, actual := "mixin's parameter must start with \"$\" [line: 1]", err.Error(); actual != expected {
 		t.Errorf("error should be %q [actual: %q]", expected, actual)
 	}
 }

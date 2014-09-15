@@ -23,6 +23,10 @@ func newElement(ln *line, parent element) (element, error) {
 		// error can be ignored becuase the line is checked beforehand
 		// by calling `ln.isMixinDeclaration()`.
 		e, _ = newMixinDeclaration(ln, parent)
+	case ln.isMixinInvocation():
+		// error can be ignored becuase the line is checked beforehand
+		// by calling `ln.isMixinInvocation()`.
+		e, _ = newMixinInvocation(ln, parent)
 	case ln.isVariable():
 		e, err = newVariable(ln, parent)
 	case ln.isDeclaration():

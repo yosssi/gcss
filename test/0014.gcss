@@ -4,4 +4,6 @@ $test($param1, $param2)
 
 html
   body
+    display: block
     $test(12px, blue)
+    margin: 0

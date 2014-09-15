@@ -7,8 +7,10 @@ $test($param1, $param2)
 $test2($param)
   div
     display: $param
+    span
+      display: $param
   &:hover
-    color: red
+    color: $param2
 
 html
   body

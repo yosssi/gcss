@@ -67,6 +67,11 @@ func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 		for {
 			select {
 			case elem, ok := <-elemc:
+
+				if elem != nil {
+					elem.SetContext(ctx)
+				}
+
 				switch elem.(type) {
 				case *mixinDeclaration:
 					v := elem.(*mixinDeclaration)
@@ -75,7 +80,6 @@ func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 					v := elem.(*variable)
 					ctx.vars[v.name] = v
 				case *atRule, *declaration, *selector:
-					elem.SetContext(ctx)
 					bf := new(bytes.Buffer)
 					elem.WriteTo(bf)
 					bc <- bf.Bytes()

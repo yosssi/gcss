@@ -15,6 +15,11 @@ type selector struct {
 
 // WriteTo writes the selector to the writer.
 func (sel *selector) WriteTo(w io.Writer) (int64, error) {
+	return sel.writeTo(w, nil)
+}
+
+// writeTo writes the selector to the writer.
+func (sel *selector) writeTo(w io.Writer, params map[string]string) (int64, error) {
 	bf := new(bytes.Buffer)
 
 	// Write the declarations.
@@ -24,7 +29,17 @@ func (sel *selector) WriteTo(w io.Writer) (int64, error) {
 
 		for _, dec := range sel.decs {
 			// Writing to the bytes.Buffer never returns an error.
-			dec.WriteTo(bf)
+			dec.writeTo(bf, params)
+		}
+
+		// Write the mixin's declarations.
+		for _, mi := range sel.mixins {
+			decs, prms := mi.decsParams()
+
+			for _, dec := range decs {
+				// Writing to the bytes.Buffer never returns an error.
+				dec.writeTo(bf, prms)
+			}
 		}
 
 		bf.WriteString(closeBrace)
@@ -33,7 +48,18 @@ func (sel *selector) WriteTo(w io.Writer) (int64, error) {
 	// Write the child selectors.
 	for _, childSel := range sel.sels {
 		// Writing to the bytes.Buffer never returns an error.
-		childSel.WriteTo(bf)
+		childSel.writeTo(bf, params)
+	}
+
+	// Write the mixin's selectors.
+	for _, mi := range sel.mixins {
+		sels, prms := mi.selsParams()
+
+		for _, sl := range sels {
+			sl.parent = sel
+			// Writing to the bytes.Buffer never returns an error.
+			sl.writeTo(bf, prms)
+		}
 	}
 
 	n, err := w.Write(bf.Bytes())

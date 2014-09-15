@@ -8,16 +8,19 @@ type elementBase struct {
 	parent element
 	sels   []*selector
 	decs   []*declaration
+	mixins []*mixinInvocation
 	ctx    *context
 }
 
 // AppendChild appends a child element to the element.
 func (eBase *elementBase) AppendChild(child element) error {
 	switch child.(type) {
-	case *selector:
-		eBase.sels = append(eBase.sels, child.(*selector))
+	case *mixinInvocation:
+		eBase.mixins = append(eBase.mixins, child.(*mixinInvocation))
 	case *declaration:
 		eBase.decs = append(eBase.decs, child.(*declaration))
+	case *selector:
+		eBase.sels = append(eBase.sels, child.(*selector))
 	default:
 		return fmt.Errorf("invalid child's type [line: %d]", eBase.ln.no)
 	}

@@ -16,17 +16,19 @@ type declaration struct {
 
 // WriteTo writes the declaration to the writer.
 func (dec *declaration) WriteTo(w io.Writer) (int64, error) {
+	return dec.writeTo(w, nil)
+}
+
+// writeTo writes the declaration to the writer.
+func (dec *declaration) writeTo(w io.Writer, params map[string]string) (int64, error) {
 	bf := new(bytes.Buffer)
 
 	bf.WriteString(dec.property)
 	bf.WriteString(colon)
 
 	if strings.HasPrefix(dec.value, dollarMark) {
-		v, ok := dec.Context().vars[strings.TrimPrefix(dec.value, dollarMark)]
-		if ok {
-			// Writing to the bytes.Buffer never returns an error.
-			v.WriteTo(bf)
-		}
+		// Writing to the bytes.Buffer never returns an error.
+		dec.writeParamTo(bf, strings.TrimPrefix(dec.value, dollarMark), params)
 	} else {
 		bf.WriteString(dec.value)
 	}
@@ -36,6 +38,20 @@ func (dec *declaration) WriteTo(w io.Writer) (int64, error) {
 	n, err := w.Write(bf.Bytes())
 
 	return int64(n), err
+}
+
+// writeParam writes the param to the writer.
+func (dec *declaration) writeParamTo(w io.Writer, name string, params map[string]string) (int64, error) {
+	if s, ok := params[name]; ok {
+		n, err := w.Write([]byte(s))
+		return int64(n), err
+	}
+
+	if v, ok := dec.Context().vars[name]; ok {
+		return v.WriteTo(w)
+	}
+
+	return 0, nil
 }
 
 // declarationPV extracts a declaration property and value

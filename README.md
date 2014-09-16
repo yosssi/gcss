@@ -37,7 +37,7 @@ a
 
 ### Mixins
 
-```sass
+```scss
 $border-radius($radius)
   -webkit-border-radius: $radius
   -moz-border-radius: $radius

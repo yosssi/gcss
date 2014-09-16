@@ -23,7 +23,7 @@ body
 
 ### Nesting
 
-```gcss
+```sass
 nav
   ul
     margin: 0
@@ -37,7 +37,7 @@ a
 
 ### Mixins
 
-```gcss
+```sass
 $border-radius($radius)
   -webkit-border-radius: $radius
   -moz-border-radius:    $radius

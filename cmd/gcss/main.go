@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io"
 	"os"
 
@@ -19,7 +18,7 @@ func main() {
 	flag.Parse()
 
 	if *v {
-		fmt.Println(gcss.Version)
+		writeTo(os.Stdout, gcss.Version)
 		exit(0)
 		return
 	}

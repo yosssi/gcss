@@ -47,7 +47,7 @@ func Test_write_err(t *testing.T) {
 func Test_write_writeErr(t *testing.T) {
 	newBufWriterBak := newBufWriter
 
-	newBufWriter = func(w io.Writer) WriteFlusher {
+	newBufWriter = func(w io.Writer) writeFlusher {
 		return &writeErrBufWriter{}
 	}
 
@@ -73,7 +73,7 @@ func Test_write_writeErr(t *testing.T) {
 func Test_write_flushErr(t *testing.T) {
 	newBufWriterBak := newBufWriter
 
-	newBufWriter = func(w io.Writer) WriteFlusher {
+	newBufWriter = func(w io.Writer) writeFlusher {
 		return &flushErrBufWriter{}
 	}
 

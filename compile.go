@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-const bcBufSize = 1024
-
 // cssFilePath creates and returns the CSS file path.
 var cssFilePath = func(path string) string {
 	ext := filepath.Ext(path)

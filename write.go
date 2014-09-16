@@ -8,13 +8,13 @@ import (
 
 const extCSS = ".css"
 
-// WriteFlusher is the interface that groups the basic Write and Flush methods.
-type WriteFlusher interface {
+// writeFlusher is the interface that groups the basic Write and Flush methods.
+type writeFlusher interface {
 	io.Writer
 	Flush() error
 }
 
-var newBufWriter = func(w io.Writer) WriteFlusher {
+var newBufWriter = func(w io.Writer) writeFlusher {
 	return bufio.NewWriter(w)
 }
 

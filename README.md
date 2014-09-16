@@ -62,7 +62,7 @@ $ gcss /path/to/gcss/file
 
 ## Compile from Go programs
 
-You can compile a GCSS file from Go programs by invoking `gcss.Compile` function. Please see the [GoDoc](http://godoc.org/github.com/yosssi/gcss) for the datails.
+You can compile a GCSS file from Go programs by invoking the `gcss.Compile` function. Please see the [GoDoc](http://godoc.org/github.com/yosssi/gcss) for the details.
 
 ```go
 pathc, errc := gcss.Compile("path_to_gcss_file")

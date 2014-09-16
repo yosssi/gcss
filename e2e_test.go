@@ -11,7 +11,7 @@ import (
 func Test_e2e(t *testing.T) {
 	var wg sync.WaitGroup
 
-	for i := 1; i <= 1; i++ {
+	for i := 1; i <= 3; i++ {
 		idx := strconv.Itoa(i)
 
 		gcssPath := "test/e2e/actual/" + strings.Repeat("0", 4-len(idx)) + idx + ".gcss"
@@ -19,6 +19,8 @@ func Test_e2e(t *testing.T) {
 		wg.Add(1)
 
 		go func() {
+			defer wg.Done()
+
 			pc, errc := Compile(gcssPath)
 
 			select {
@@ -29,27 +31,23 @@ func Test_e2e(t *testing.T) {
 
 				if err != nil {
 					t.Errorf("error occurred [error: %q]", err.Error())
+					return
 				}
 
 				expectedB, err := ioutil.ReadFile(expectedCSSPath)
 
 				if err != nil {
 					t.Errorf("error occurred [error: %q]", err.Error())
+					return
 				}
 
-				if len(actualB) != len(expectedB) {
+				if strings.TrimSpace(string(actualB)) != strings.TrimSpace(string(expectedB)) {
 					t.Errorf("actual result does not match the expected result [path: %q]", gcssPath)
+					return
 				}
-
-				for i, b := range actualB {
-					if b != expectedB[i] {
-						t.Errorf("actual result does not match the expected result [path: %q]", gcssPath)
-					}
-				}
-
-				wg.Done()
 			case err := <-errc:
 				t.Errorf("error occurred [error: %q]", err.Error())
+				return
 			}
 		}()
 

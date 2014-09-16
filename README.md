@@ -36,5 +36,10 @@ case err := <-errc:
 }
 ```
 
+## Documentation
+
+* [GoDoc](http://godoc.org/github.com/yosssi/gcss)
+
 ## Syntax Highlightings
-* [vim-gcss] - Vim syntax highlighting for GCSS
+
+* [vim-gcss](https://github.com/yosssi/vim-gcss) - Vim syntax highlighting for GCSS

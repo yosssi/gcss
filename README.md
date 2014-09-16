@@ -14,6 +14,10 @@ $ go get -u github.com/yosssi/gcss/...
 
 ## Compile from the Command-Line
 
+```sh
+$ gcss /path/to/gcss/file
+```
+
 ## Integrate with Web Applications
 
 ## Syntax Highlightings

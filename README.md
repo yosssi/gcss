@@ -12,7 +12,7 @@ GCSS is a pure Go CSS preprocessor. This is inspired by [Sass](http://sass-lang.
 
 ### Variables
 
-```gcss
+```sass
 $base-font: Helvetica, sans-serif
 $main-color: blue
 

@@ -26,11 +26,17 @@ func (dec *declaration) writeTo(w io.Writer, params map[string]string) (int64, e
 	bf.WriteString(dec.property)
 	bf.WriteString(colon)
 
-	if strings.HasPrefix(dec.value, dollarMark) {
-		// Writing to the bytes.Buffer never returns an error.
-		dec.writeParamTo(bf, strings.TrimPrefix(dec.value, dollarMark), params)
-	} else {
-		bf.WriteString(dec.value)
+	for i, v := range strings.Split(dec.value, space) {
+		if i > 0 {
+			bf.WriteString(space)
+		}
+
+		if strings.HasPrefix(v, dollarMark) {
+			// Writing to the bytes.Buffer never returns an error.
+			dec.writeParamTo(bf, strings.TrimPrefix(v, dollarMark), params)
+		} else {
+			bf.WriteString(v)
+		}
 	}
 
 	bf.WriteString(semicolon)
@@ -43,6 +49,13 @@ func (dec *declaration) writeTo(w io.Writer, params map[string]string) (int64, e
 // writeParam writes the param to the writer.
 func (dec *declaration) writeParamTo(w io.Writer, name string, params map[string]string) (int64, error) {
 	if s, ok := params[name]; ok {
+		if strings.HasPrefix(s, dollarMark) {
+			if v, ok := dec.Context().vars[strings.TrimPrefix(s, dollarMark)]; ok {
+				return v.WriteTo(w)
+			}
+			return 0, nil
+		}
+
 		n, err := w.Write([]byte(s))
 		return int64(n), err
 	}

@@ -41,6 +41,18 @@ func (eBase *elementBase) Context() *context {
 	return eBase.ctx
 }
 
+// hasMixinDecs returns true if the selector has a mixin
+// which has declarations.
+func (eBase *elementBase) hasMixinDecs() bool {
+	for _, mi := range eBase.mixins {
+		if decs, _ := mi.decsParams(); len(decs) > 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 // newElementBase creates and returns an element base.
 func newElementBase(ln *line, parent element) elementBase {
 	return elementBase{

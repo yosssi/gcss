@@ -55,11 +55,15 @@ func mixinNP(ln *line, isDeclaration bool) (string, []string, error) {
 	for i, p := range params {
 		p = strings.TrimSpace(p)
 
-		if isDeclaration && !strings.HasPrefix(p, dollarMark) {
-			return "", nil, fmt.Errorf("mixin's parameter must start with %q [line: %d]", dollarMark, ln.no)
+		if isDeclaration {
+			if !strings.HasPrefix(p, dollarMark) {
+				return "", nil, fmt.Errorf("mixin's parameter must start with %q [line: %d]", dollarMark, ln.no)
+			}
+
+			p = strings.TrimPrefix(p, dollarMark)
 		}
 
-		params[i] = strings.TrimPrefix(p, dollarMark)
+		params[i] = p
 	}
 
 	return np[0], params, nil

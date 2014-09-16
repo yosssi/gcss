@@ -23,7 +23,7 @@ func (sel *selector) writeTo(w io.Writer, params map[string]string) (int64, erro
 	bf := new(bytes.Buffer)
 
 	// Write the declarations.
-	if len(sel.decs) > 0 {
+	if len(sel.decs) > 0 || sel.hasMixinDecs() {
 		bf.WriteString(sel.names())
 		bf.WriteString(openBrace)
 

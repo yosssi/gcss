@@ -6,7 +6,47 @@
 
 ## Overview
 
-GCSS is a pure Go CSS preprocessor.
+GCSS is a pure Go CSS preprocessor. This is inspired by [Sass](http://sass-lang.com/) and [Stylus](http://learnboost.github.io/stylus/).
+
+## Syntax
+
+### Variables
+
+```gcss
+$base-font: Helvetica, sans-serif
+$main-color: blue
+
+body
+  font: 100% $base-font
+  color: $main-color:
+```
+
+### Nesting
+
+```gcss
+nav
+  ul
+    margin: 0
+    padding: 0
+
+a
+  color: blue
+  &:hover
+    color: red
+```
+
+### Mixins
+
+```gcss
+$border-radius($radius)
+  -webkit-border-radius: $radius
+  -moz-border-radius:    $radius
+  -ms-border-radius:     $radius
+  border-radius:         $radius
+
+.box
+  $border-radius(10px)
+```
 
 ## Installation
 

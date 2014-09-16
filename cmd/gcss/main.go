@@ -28,7 +28,7 @@ func main() {
 	argsL := len(args)
 
 	if argsL < validArgsLen {
-		writeTo(os.Stderr, "A GCSS file path should be specified.")
+		writeTo(os.Stderr, "GCSS file path should be specified.")
 		exit(1)
 		return
 	}

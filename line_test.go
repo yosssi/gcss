@@ -125,6 +125,22 @@ func Test_line_isMixinDeclaration_true(t *testing.T) {
 	}
 }
 
+func Test_line_isComment_false(t *testing.T) {
+	ln := newLine(1, "html")
+
+	if ln.isComment() {
+		t.Error("ln.isComment() should return false")
+	}
+}
+
+func Test_line_isComment_true(t *testing.T) {
+	ln := newLine(1, "// html")
+
+	if !ln.isComment() {
+		t.Error("ln.isComment() should return true")
+	}
+}
+
 func Test_newLine(t *testing.T) {
 	no := 1
 	s := "  html"

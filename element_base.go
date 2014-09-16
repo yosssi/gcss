@@ -1,7 +1,5 @@
 package gcss
 
-import "fmt"
-
 // elementBase holds the common fields of an element.
 type elementBase struct {
 	ln     *line
@@ -13,7 +11,7 @@ type elementBase struct {
 }
 
 // AppendChild appends a child element to the element.
-func (eBase *elementBase) AppendChild(child element) error {
+func (eBase *elementBase) AppendChild(child element) {
 	switch child.(type) {
 	case *mixinInvocation:
 		eBase.mixins = append(eBase.mixins, child.(*mixinInvocation))
@@ -21,11 +19,7 @@ func (eBase *elementBase) AppendChild(child element) error {
 		eBase.decs = append(eBase.decs, child.(*declaration))
 	case *selector:
 		eBase.sels = append(eBase.sels, child.(*selector))
-	default:
-		return fmt.Errorf("invalid child's type [line: %d]", eBase.ln.no)
 	}
-
-	return nil
 }
 
 // Base returns the element base.

@@ -30,15 +30,7 @@ func Test_selector_AppendChild(t *testing.T) {
 		t.Errorf("error occurred [error: %q]", err.Error())
 	}
 
-	err = sel.AppendChild(nil)
-
-	if err == nil {
-		t.Error("error should occur")
-	}
-
-	if expected := "invalid child's type [line: 1]"; err.Error() != expected {
-		t.Errorf("err should be %q [actual: %q]", expected, err.Error())
-	}
+	sel.AppendChild(nil)
 }
 
 func Test_newSelector_suffixCloseBraceErr(t *testing.T) {

@@ -49,7 +49,6 @@ func (ln *line) isDeclaration() bool {
 
 // isAtRule returns true if the line is an at-rule.
 func (ln *line) isAtRule() bool {
-	//fmt.Println(ln.s)
 	return strings.HasPrefix(strings.TrimSpace(ln.s), atMark)
 }
 
@@ -84,6 +83,11 @@ func (ln *line) isMixinInvocation() bool {
 	_, _, err := mixinNP(ln, false)
 
 	return err == nil
+}
+
+// isComment returns true if the line is a comment.
+func (ln *line) isComment() bool {
+	return strings.HasPrefix(strings.TrimSpace(ln.s), doubleSlash)
 }
 
 // newLine creates and returns a line.

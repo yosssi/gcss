@@ -5,7 +5,7 @@ import "io"
 // element represents an element of GCSS source codes.
 type element interface {
 	io.WriterTo
-	AppendChild(child element) error
+	AppendChild(child element)
 	Base() *elementBase
 	SetContext(*context)
 	Context() *context
@@ -17,6 +17,8 @@ func newElement(ln *line, parent element) (element, error) {
 	var err error
 
 	switch {
+	case ln.isComment():
+		e = newComment(ln, parent)
 	case ln.isAtRule():
 		e = newAtRule(ln, parent)
 	case ln.isMixinDeclaration():

@@ -11,6 +11,7 @@ a, b
   color: #000
   c, d
     color: blue
+  // comment
   &:hover
     color: red
     font-size: 10px

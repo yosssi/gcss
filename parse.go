@@ -18,6 +18,8 @@ const (
 	dollarMark       = "$"
 	openParenthesis  = "("
 	closeParenthesis = ")"
+	slash            = "/"
+	doubleSlash      = slash + slash
 )
 
 // parse parses the string, generates the elements

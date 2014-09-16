@@ -6,6 +6,8 @@
 
 ## Overview
 
+GCSS is a pure Go CSS preprocessor.
+
 ## Installation
 
 ```sh
@@ -18,6 +20,21 @@ $ go get -u github.com/yosssi/gcss/...
 $ gcss /path/to/gcss/file
 ```
 
-## Integrate with Web Applications
+## Compile from Go programs
+
+You can compile a GCSS file from Go programs by invoking `gcss.Compile` function. Please see the [GoDoc](http://godoc.org/github.com/yosssi/gcss) for the datails.
+
+```go
+pathc, errc := gcss.Compile("path_to_the_gcss_file")
+
+select {
+case path := <-pathc:
+	http.ServeFile(w, r, path)
+case err := <-errc:
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+	return
+}
+```
 
 ## Syntax Highlightings
+* [vim-gcss] - Vim syntax highlighting for GCSS

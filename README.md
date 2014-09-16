@@ -18,7 +18,7 @@ $main-color: blue
 
 body
   font: 100% $base-font
-  color: $main-color:
+  color: $main-color
 ```
 
 ### Nesting
@@ -40,9 +40,9 @@ a
 ```sass
 $border-radius($radius)
   -webkit-border-radius: $radius
-  -moz-border-radius:    $radius
-  -ms-border-radius:     $radius
-  border-radius:         $radius
+  -moz-border-radius: $radius
+  -ms-border-radius: $radius
+  border-radius: $radius
 
 .box
   $border-radius(10px)

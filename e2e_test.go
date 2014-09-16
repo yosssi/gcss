@@ -11,7 +11,7 @@ import (
 func Test_e2e(t *testing.T) {
 	var wg sync.WaitGroup
 
-	for i := 1; i <= 8; i++ {
+	for i := 1; i <= 9; i++ {
 		idx := strconv.Itoa(i)
 
 		gcssPath := "test/e2e/actual/" + strings.Repeat("0", 4-len(idx)) + idx + ".gcss"

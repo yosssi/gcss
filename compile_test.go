@@ -122,6 +122,6 @@ func TestCompileFile_pattern2(t *testing.T) {
 	}
 }
 
-func TestComplieBytes(t *testing.T) {
-	CompileBytes([]byte(""))
+func Test_complieBytes(t *testing.T) {
+	compileBytes([]byte(""))
 }

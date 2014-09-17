@@ -23,7 +23,7 @@ func Compile(dst io.Writer, src io.Reader) (int, error) {
 		return 0, err
 	}
 
-	bc, berrc := CompileBytes(data)
+	bc, berrc := compileBytes(data)
 
 	bf := new(bytes.Buffer)
 
@@ -62,7 +62,7 @@ func CompileFile(path string) (<-chan string, <-chan error) {
 
 		cssPath := cssFilePath(path)
 
-		bc, berrc := CompileBytes(data)
+		bc, berrc := compileBytes(data)
 
 		done, werrc := write(cssPath, bc, berrc)
 
@@ -78,11 +78,11 @@ func CompileFile(path string) (<-chan string, <-chan error) {
 	return pathc, errc
 }
 
-// CompileBytes parses the GCSS byte array passed as the s parameter,
+// compileBytes parses the GCSS byte array passed as the s parameter,
 // generates a CSS byte array and returns the two channels: the first
 // one returns the CSS byte array and the last one returns an error
 // when it occurs.
-func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
+func compileBytes(b []byte) (<-chan []byte, <-chan error) {
 	lines := strings.Split(formatLF(string(b)), lf)
 
 	bc := make(chan []byte, len(lines))

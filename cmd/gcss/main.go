@@ -34,8 +34,7 @@ func main() {
 	}
 
 	if argsL == 0 {
-		_, err := gcss.Compile(os.Stdout, stdin)
-		if err != nil {
+		if _, err := gcss.Compile(os.Stdout, stdin); err != nil {
 			writeTo(os.Stderr, err.Error())
 			exit(1)
 			return

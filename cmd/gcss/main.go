@@ -12,6 +12,7 @@ import (
 const validArgsLen = 1
 
 var exit = os.Exit
+var stdin = os.Stdin
 
 func main() {
 	v := flag.Bool("v", false, "Print the version and exit.")
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	if argsL == 0 {
-		b, err := ioutil.ReadAll(os.Stdin)
+		b, err := ioutil.ReadAll(stdin)
 
 		if err != nil {
 			writeTo(os.Stderr, err.Error())

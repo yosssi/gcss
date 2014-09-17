@@ -18,7 +18,45 @@ func Test_main_flagV(t *testing.T) {
 	main()
 }
 
-func Test_main_argsLLessThanValidLen(t *testing.T) {
+func Test_main_noArgsReadAllErr(t *testing.T) {
+	stdinBak := stdin
+
+	defer func() {
+		stdin = stdinBak
+	}()
+
+	stdin = nil
+
+	resetForTesting(nil)
+
+	os.Args = []string{os.Args[0]}
+
+	main()
+}
+
+func Test_main_noArgsCompileErr(t *testing.T) {
+	stdinBak := stdin
+
+	defer func() {
+		stdin = stdinBak
+	}()
+
+	var err error
+
+	stdin, err = os.Open("test/0002.gcss")
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	resetForTesting(nil)
+
+	os.Args = []string{os.Args[0]}
+
+	main()
+}
+
+func Test_main_noArgs(t *testing.T) {
 	resetForTesting(nil)
 
 	os.Args = []string{os.Args[0]}
@@ -45,7 +83,7 @@ func Test_main_compileErr(t *testing.T) {
 func Test_main(t *testing.T) {
 	resetForTesting(nil)
 
-	os.Args = []string{os.Args[0], "test/1.gcss"}
+	os.Args = []string{os.Args[0], "test/0001.gcss"}
 
 	main()
 }

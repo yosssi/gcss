@@ -32,7 +32,7 @@ func TestCompile_writeErr(t *testing.T) {
 	cssFileBack := cssFilePath
 
 	cssFilePath = func(_ string) string {
-		return "not_exist_dir/not_exit_file"
+		return "not_exist_dir/not_exist_file"
 	}
 
 	pathc, errc := Compile("test/0003.gcss")
@@ -41,7 +41,7 @@ func TestCompile_writeErr(t *testing.T) {
 	case <-pathc:
 		t.Error("error should be occurred")
 	case err := <-errc:
-		if expected, actual := "open not_exist_dir/not_exit_file: no such file or directory", err.Error(); expected != actual {
+		if expected, actual := "open not_exist_dir/not_exist_file: no such file or directory", err.Error(); expected != actual {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}

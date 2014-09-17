@@ -32,13 +32,13 @@ func Test_write_err(t *testing.T) {
 	bc := make(chan []byte)
 	berrc := make(chan error)
 
-	done, errc := write("not_exist_dir/not_exit_file", bc, berrc)
+	done, errc := write("not_exist_dir/not_exist_file", bc, berrc)
 
 	select {
 	case <-done:
 		t.Error("error should be occurred")
 	case err := <-errc:
-		if expected, actual := "open not_exist_dir/not_exit_file: no such file or directory", err.Error(); expected != actual {
+		if expected, actual := "open not_exist_dir/not_exist_file: no such file or directory", err.Error(); expected != actual {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}

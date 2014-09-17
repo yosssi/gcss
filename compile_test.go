@@ -1,5 +1,7 @@
 package gcss
 
+import "os"
+import "strings"
 import "testing"
 
 func TestCompile_readFileErr(t *testing.T) {
@@ -9,7 +11,7 @@ func TestCompile_readFileErr(t *testing.T) {
 	case <-pathc:
 		t.Error("error should be occurred")
 	case err := <-errc:
-		if expected, actual := "open not_exist_file: no such file or directory", err.Error(); expected != actual {
+		if expected, actual := "open not_exist_file: ", err.Error(); !strings.HasPrefix(actual, expected) || !os.IsNotExist(err) {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}
@@ -41,7 +43,7 @@ func TestCompile_writeErr(t *testing.T) {
 	case <-pathc:
 		t.Error("error should be occurred")
 	case err := <-errc:
-		if expected, actual := "open not_exist_dir/not_exist_file: no such file or directory", err.Error(); expected != actual {
+		if expected, actual := "open not_exist_dir/not_exist_file: ", err.Error(); !strings.HasPrefix(actual, expected) || !os.IsNotExist(err) {
 			t.Errorf("err should be %q [actual: %q]", expected, actual)
 		}
 	}

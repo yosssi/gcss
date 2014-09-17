@@ -60,6 +60,12 @@ $ go get -u github.com/yosssi/gcss/...
 $ gcss /path/to/gcss/file
 ```
 
+or
+
+```sh
+$ cat /path/to/gcss/file | gcss > /path/to/css/file
+```
+
 ## Compile from Go programs
 
 You can compile a GCSS file from Go programs by invoking the `gcss.Compile` function. Please see the [GoDoc](http://godoc.org/github.com/yosssi/gcss) for the details.

@@ -27,20 +27,8 @@ func (sel *selector) writeTo(w io.Writer, params map[string]string) (int64, erro
 		bf.WriteString(sel.names())
 		bf.WriteString(openBrace)
 
-		for _, dec := range sel.decs {
-			// Writing to the bytes.Buffer never returns an error.
-			dec.writeTo(bf, params)
-		}
-
-		// Write the mixin's declarations.
-		for _, mi := range sel.mixins {
-			decs, prms := mi.decsParams()
-
-			for _, dec := range decs {
-				// Writing to the bytes.Buffer never returns an error.
-				dec.writeTo(bf, prms)
-			}
-		}
+		// Writing to the bytes.Buffer never returns an error.
+		sel.writeDecsTo(bf, params)
 
 		bf.WriteString(closeBrace)
 	}

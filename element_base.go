@@ -1,5 +1,10 @@
 package gcss
 
+import (
+	"bytes"
+	"io"
+)
+
 // elementBase holds the common fields of an element.
 type elementBase struct {
 	ln     *line
@@ -41,7 +46,7 @@ func (eBase *elementBase) Context() *context {
 	return eBase.ctx
 }
 
-// hasMixinDecs returns true if the selector has a mixin
+// hasMixinDecs returns true if the element has a mixin
 // which has declarations.
 func (eBase *elementBase) hasMixinDecs() bool {
 	for _, mi := range eBase.mixins {
@@ -51,6 +56,43 @@ func (eBase *elementBase) hasMixinDecs() bool {
 	}
 
 	return false
+}
+
+// hasMixinSels returns true if the element has a mixin
+// which has selectors.
+func (eBase *elementBase) hasMixinSels() bool {
+	for _, mi := range eBase.mixins {
+		if sels, _ := mi.selsParams(); len(sels) > 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
+// writeDecsTo writes the element's declarations to w.
+func (eBase *elementBase) writeDecsTo(w io.Writer, params map[string]string) (int64, error) {
+	bf := new(bytes.Buffer)
+
+	// Write the declarations.
+	for _, dec := range eBase.decs {
+		// Writing to the bytes.Buffer never returns an error.
+		dec.writeTo(bf, params)
+	}
+
+	// Write the mixin's declarations.
+	for _, mi := range eBase.mixins {
+		decs, prms := mi.decsParams()
+
+		for _, dec := range decs {
+			// Writing to the bytes.Buffer never returns an error.
+			dec.writeTo(bf, prms)
+		}
+	}
+
+	n, err := w.Write(bf.Bytes())
+
+	return int64(n), err
 }
 
 // newElementBase creates and returns an element base.

@@ -16,7 +16,7 @@ func Test_atRule_WriteTo(t *testing.T) {
 }
 
 func Test_atRule_WriteTo_fromFile(t *testing.T) {
-	pathc, errc := Compile("test/0009.gcss")
+	pathc, errc := CompileFile("test/0009.gcss")
 
 	select {
 	case <-pathc:

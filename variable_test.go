@@ -18,7 +18,7 @@ func Test_variable_WriteTo(t *testing.T) {
 }
 
 func Test_variable_WriteTo_fromFile(t *testing.T) {
-	pathc, errc := Compile("test/0013.gcss")
+	pathc, errc := CompileFile("test/0013.gcss")
 
 	select {
 	case <-pathc:

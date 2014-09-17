@@ -2,6 +2,7 @@ package gcss
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -13,11 +14,41 @@ var cssFilePath = func(path string) string {
 	return strings.TrimSuffix(path, ext) + extCSS
 }
 
-// Compile parses the GCSS file specified by the path parameter,
+// Compile compiles GCSS data which is read from src and
+// Writes the result CSS data to the dst.
+func Compile(dst io.Writer, src io.Reader) (int, error) {
+	data, err := ioutil.ReadAll(src)
+
+	if err != nil {
+		return 0, err
+	}
+
+	bc, berrc := CompileBytes(data)
+
+	bf := new(bytes.Buffer)
+
+BufWriteLoop:
+	for {
+		select {
+		case b, ok := <-bc:
+			if !ok {
+				break BufWriteLoop
+			}
+
+			bf.Write(b)
+		case err := <-berrc:
+			return 0, err
+		}
+	}
+
+	return dst.Write(bf.Bytes())
+}
+
+// CompileFile parses the GCSS file specified by the path parameter,
 // generates a CSS file and returns the two channels: the first
 // one returns the path of the generated CSS file and the last
 // one returns an error when it occurs.
-func Compile(path string) (<-chan string, <-chan error) {
+func CompileFile(path string) (<-chan string, <-chan error) {
 	pathc := make(chan string)
 	errc := make(chan error)
 
@@ -65,10 +96,12 @@ func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 		for {
 			select {
 			case elem, ok := <-elemc:
-
-				if elem != nil {
-					elem.SetContext(ctx)
+				if !ok {
+					close(bc)
+					return
 				}
+
+				elem.SetContext(ctx)
 
 				switch elem.(type) {
 				case *mixinDeclaration:
@@ -81,11 +114,6 @@ func CompileBytes(b []byte) (<-chan []byte, <-chan error) {
 					bf := new(bytes.Buffer)
 					elem.WriteTo(bf)
 					bc <- bf.Bytes()
-				}
-
-				if !ok {
-					close(bc)
-					return
 				}
 			case err := <-pErrc:
 				errc <- err

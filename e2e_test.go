@@ -21,7 +21,7 @@ func Test_e2e(t *testing.T) {
 		go func() {
 			defer wg.Done()
 
-			pc, errc := Compile(gcssPath)
+			pc, errc := CompileFile(gcssPath)
 
 			select {
 			case actualCSSPath := <-pc:

@@ -38,11 +38,6 @@ func write(path string, bc <-chan []byte, berrc <-chan error) (<-chan struct{}, 
 		for {
 			select {
 			case b, ok := <-bc:
-				if _, err := w.Write(b); err != nil {
-					errc <- err
-					return
-				}
-
 				if !ok {
 					if err := w.Flush(); err != nil {
 						errc <- err
@@ -51,6 +46,11 @@ func write(path string, bc <-chan []byte, berrc <-chan error) (<-chan struct{}, 
 
 					done <- struct{}{}
 
+					return
+				}
+
+				if _, err := w.Write(b); err != nil {
+					errc <- err
 					return
 				}
 			case err := <-berrc:

@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"io"
-	"io/ioutil"
 	"os"
 
 	"github.com/yosssi/gcss"
@@ -35,26 +34,14 @@ func main() {
 	}
 
 	if argsL == 0 {
-		b, err := ioutil.ReadAll(stdin)
-
+		_, err := gcss.Compile(os.Stdout, stdin)
 		if err != nil {
 			writeTo(os.Stderr, err.Error())
 			exit(1)
 			return
 		}
-
-		bc, errc := gcss.CompileBytes(b)
-
-		select {
-		case b := <-bc:
-			os.Stdout.Write(b)
-		case err := <-errc:
-			writeTo(os.Stderr, err.Error())
-			exit(1)
-			return
-		}
 	} else {
-		pathc, errc := gcss.Compile(args[0])
+		pathc, errc := gcss.CompileFile(args[0])
 
 		select {
 		case path := <-pathc:

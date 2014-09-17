@@ -1,11 +1,54 @@
 package gcss
 
-import "os"
+import (
+	"errors"
+	"os"
+)
 import "strings"
 import "testing"
 
-func TestCompile_readFileErr(t *testing.T) {
-	pathc, errc := Compile("not_exist_file")
+var errErrReader = errors.New("errReader error")
+
+type errReader struct{}
+
+func (r *errReader) Read(p []byte) (int, error) {
+	return 0, errErrReader
+}
+
+func TestCompile_readAllErr(t *testing.T) {
+	if _, err := Compile(os.Stdout, &errReader{}); err != errErrReader {
+		t.Errorf("error should be %+v [actual: %+v]", errErrReader, err)
+	}
+}
+
+func TestCompile_compileBytesErr(t *testing.T) {
+	r, err := os.Open("test/0015.gcss")
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	_, err = Compile(os.Stdout, r)
+
+	if expected, actual := "indent is invalid [line: 5]", err.Error(); actual != expected {
+		t.Errorf("error should be %+q [actual: %+q]", expected, actual)
+	}
+}
+
+func TestCompile(t *testing.T) {
+	r, err := os.Open("test/0016.gcss")
+
+	if err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	if _, err := Compile(os.Stdout, r); err != nil {
+		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+}
+
+func TestCompileFile_readFileErr(t *testing.T) {
+	pathc, errc := CompileFile("not_exist_file")
 
 	select {
 	case <-pathc:
@@ -17,8 +60,8 @@ func TestCompile_readFileErr(t *testing.T) {
 	}
 }
 
-func TestCompile_compileStringErr(t *testing.T) {
-	pathc, errc := Compile("test/0004.gcss")
+func TestCompileFile_compileStringErr(t *testing.T) {
+	pathc, errc := CompileFile("test/0004.gcss")
 
 	select {
 	case <-pathc:
@@ -30,14 +73,14 @@ func TestCompile_compileStringErr(t *testing.T) {
 	}
 }
 
-func TestCompile_writeErr(t *testing.T) {
+func TestCompileFile_writeErr(t *testing.T) {
 	cssFileBack := cssFilePath
 
 	cssFilePath = func(_ string) string {
 		return "not_exist_dir/not_exist_file"
 	}
 
-	pathc, errc := Compile("test/0003.gcss")
+	pathc, errc := CompileFile("test/0003.gcss")
 
 	select {
 	case <-pathc:
@@ -51,8 +94,8 @@ func TestCompile_writeErr(t *testing.T) {
 	cssFilePath = cssFileBack
 }
 
-func TestCompile(t *testing.T) {
-	pathc, errc := Compile("test/0003.gcss")
+func TestCompileFile(t *testing.T) {
+	pathc, errc := CompileFile("test/0003.gcss")
 
 	select {
 	case path := <-pathc:
@@ -64,10 +107,10 @@ func TestCompile(t *testing.T) {
 	}
 }
 
-func TestCompile_pattern2(t *testing.T) {
+func TestCompileFile_pattern2(t *testing.T) {
 	gcssPath := "test/0007.gcss"
 
-	pathc, errc := Compile(gcssPath)
+	pathc, errc := CompileFile(gcssPath)
 
 	select {
 	case path := <-pathc:

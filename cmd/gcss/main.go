@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"io"
+	"io/ioutil"
 	"os"
 
 	"github.com/yosssi/gcss"
@@ -26,27 +27,42 @@ func main() {
 	args := flag.Args()
 	argsL := len(args)
 
-	if argsL < validArgsLen {
-		writeTo(os.Stderr, "GCSS file path should be specified.")
-		exit(1)
-		return
-	}
-
 	if argsL > validArgsLen {
 		writeTo(os.Stderr, "The number of the command line args should be 1.")
 		exit(1)
 		return
 	}
 
-	pathc, errc := gcss.Compile(args[0])
+	if argsL == 0 {
+		b, err := ioutil.ReadAll(os.Stdin)
 
-	select {
-	case path := <-pathc:
-		writeTo(os.Stdout, "compiled "+path)
-	case err := <-errc:
-		writeTo(os.Stderr, err.Error())
-		exit(1)
-		return
+		if err != nil {
+			writeTo(os.Stderr, err.Error())
+			exit(1)
+			return
+		}
+
+		bc, errc := gcss.CompileBytes(b)
+
+		select {
+		case b := <-bc:
+			os.Stdout.Write(b)
+		case err := <-errc:
+			writeTo(os.Stderr, err.Error())
+			exit(1)
+			return
+		}
+	} else {
+		pathc, errc := gcss.Compile(args[0])
+
+		select {
+		case path := <-pathc:
+			writeTo(os.Stdout, "compiled "+path)
+		case err := <-errc:
+			writeTo(os.Stderr, err.Error())
+			exit(1)
+			return
+		}
 	}
 }
 

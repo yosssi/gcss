@@ -48,28 +48,26 @@ func TestCompile(t *testing.T) {
 }
 
 func TestCompileFile_readFileErr(t *testing.T) {
-	pathc, errc := CompileFile("not_exist_file")
+	_, err := CompileFile("not_exist_file")
 
-	select {
-	case <-pathc:
+	if err == nil {
 		t.Error("error should be occurred")
-	case err := <-errc:
-		if expected, actual := "open not_exist_file: ", err.Error(); !strings.HasPrefix(actual, expected) || !os.IsNotExist(err) {
-			t.Errorf("err should be %q [actual: %q]", expected, actual)
-		}
+	}
+
+	if expected, actual := "open not_exist_file: ", err.Error(); !strings.HasPrefix(actual, expected) || !os.IsNotExist(err) {
+		t.Errorf("err should be %q [actual: %q]", expected, actual)
 	}
 }
 
 func TestCompileFile_compileStringErr(t *testing.T) {
-	pathc, errc := CompileFile("test/0004.gcss")
+	_, err := CompileFile("test/0004.gcss")
 
-	select {
-	case <-pathc:
+	if err == nil {
 		t.Error("error should be occurred")
-	case err := <-errc:
-		if expected, actual := "indent is invalid [line: 5]", err.Error(); expected != actual {
-			t.Errorf("err should be %q [actual: %q]", expected, actual)
-		}
+	}
+
+	if expected, actual := "indent is invalid [line: 5]", err.Error(); expected != actual {
+		t.Errorf("err should be %q [actual: %q]", expected, actual)
 	}
 }
 
@@ -80,45 +78,42 @@ func TestCompileFile_writeErr(t *testing.T) {
 		return "not_exist_dir/not_exist_file"
 	}
 
-	pathc, errc := CompileFile("test/0003.gcss")
+	_, err := CompileFile("test/0003.gcss")
 
-	select {
-	case <-pathc:
+	if err == nil {
 		t.Error("error should be occurred")
-	case err := <-errc:
-		if expected, actual := "open not_exist_dir/not_exist_file: ", err.Error(); !strings.HasPrefix(actual, expected) || !os.IsNotExist(err) {
-			t.Errorf("err should be %q [actual: %q]", expected, actual)
-		}
+	}
+
+	if expected, actual := "open not_exist_dir/not_exist_file: ", err.Error(); !strings.HasPrefix(actual, expected) || !os.IsNotExist(err) {
+		t.Errorf("err should be %q [actual: %q]", expected, actual)
 	}
 
 	cssFilePath = cssFileBack
 }
 
 func TestCompileFile(t *testing.T) {
-	pathc, errc := CompileFile("test/0003.gcss")
+	path, err := CompileFile("test/0003.gcss")
 
-	select {
-	case path := <-pathc:
-		if expected := "test/0003.css"; expected != path {
-			t.Errorf("path should be %q [actual: %q]", expected, path)
-		}
-	case err := <-errc:
+	if err != nil {
 		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	if expected := "test/0003.css"; expected != path {
+		t.Errorf("path should be %q [actual: %q]", expected, path)
 	}
 }
 
 func TestCompileFile_pattern2(t *testing.T) {
 	gcssPath := "test/0007.gcss"
 
-	pathc, errc := CompileFile(gcssPath)
+	path, err := CompileFile(gcssPath)
 
-	select {
-	case path := <-pathc:
-		if expected := cssFilePath(path); expected != path {
-			t.Errorf("path should be %q [actual: %q]", expected, path)
-		}
-	case err := <-errc:
+	if err != nil {
 		t.Errorf("error occurred [error: %q]", err.Error())
+	}
+
+	if expected := cssFilePath(path); expected != path {
+		t.Errorf("path should be %q [actual: %q]", expected, path)
 	}
 }
 

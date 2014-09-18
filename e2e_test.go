@@ -21,32 +21,30 @@ func Test_e2e(t *testing.T) {
 		go func() {
 			defer wg.Done()
 
-			pc, errc := CompileFile(gcssPath)
+			actualCSSPath, err := CompileFile(gcssPath)
 
-			select {
-			case actualCSSPath := <-pc:
-				expectedCSSPath := strings.Replace(actualCSSPath, "actual", "expected", -1)
-
-				actualB, err := ioutil.ReadFile(actualCSSPath)
-
-				if err != nil {
-					t.Errorf("error occurred [error: %q]", err.Error())
-					return
-				}
-
-				expectedB, err := ioutil.ReadFile(expectedCSSPath)
-
-				if err != nil {
-					t.Errorf("error occurred [error: %q]", err.Error())
-					return
-				}
-
-				if strings.TrimSpace(string(actualB)) != strings.TrimSpace(string(expectedB)) {
-					t.Errorf("actual result does not match the expected result [path: %q]", gcssPath)
-					return
-				}
-			case err := <-errc:
+			if err != nil {
 				t.Errorf("error occurred [error: %q]", err.Error())
+			}
+
+			expectedCSSPath := strings.Replace(actualCSSPath, "actual", "expected", -1)
+
+			actualB, err := ioutil.ReadFile(actualCSSPath)
+
+			if err != nil {
+				t.Errorf("error occurred [error: %q]", err.Error())
+				return
+			}
+
+			expectedB, err := ioutil.ReadFile(expectedCSSPath)
+
+			if err != nil {
+				t.Errorf("error occurred [error: %q]", err.Error())
+				return
+			}
+
+			if strings.TrimSpace(string(actualB)) != strings.TrimSpace(string(expectedB)) {
+				t.Errorf("actual result does not match the expected result [path: %q]", gcssPath)
 				return
 			}
 		}()

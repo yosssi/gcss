@@ -40,16 +40,15 @@ func main() {
 			return
 		}
 	} else {
-		pathc, errc := gcss.CompileFile(args[0])
+		path, err := gcss.CompileFile(args[0])
 
-		select {
-		case path := <-pathc:
-			writeTo(os.Stdout, "compiled "+path)
-		case err := <-errc:
+		if err != nil {
 			writeTo(os.Stderr, err.Error())
 			exit(1)
 			return
 		}
+
+		writeTo(os.Stdout, "compiled "+path)
 	}
 }
 

@@ -16,11 +16,7 @@ func Test_atRule_WriteTo(t *testing.T) {
 }
 
 func Test_atRule_WriteTo_fromFile(t *testing.T) {
-	pathc, errc := CompileFile("test/0009.gcss")
-
-	select {
-	case <-pathc:
-	case err := <-errc:
+	if _, err := CompileFile("test/0009.gcss"); err != nil {
 		t.Errorf("error occurred [error: %q]", err.Error())
 	}
 }

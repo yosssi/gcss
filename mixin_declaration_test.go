@@ -134,11 +134,9 @@ func Test_newMixinDeclaration_errInvalidParamNames(t *testing.T) {
 }
 
 func Test_newMixinDeclaration_fromFile(t *testing.T) {
-	pathc, errc := CompileFile("test/0014.gcss")
+	_, err := CompileFile("test/0014.gcss")
 
-	select {
-	case <-pathc:
-	case err := <-errc:
+	if err != nil {
 		t.Error("error occurred [error: %q]", err.Error())
 	}
 }

@@ -45,37 +45,28 @@ BufWriteLoop:
 }
 
 // CompileFile parses the GCSS file specified by the path parameter,
-// generates a CSS file and returns the two channels: the first
-// one returns the path of the generated CSS file and the last
-// one returns an error when it occurs.
-func CompileFile(path string) (<-chan string, <-chan error) {
-	pathc := make(chan string)
-	errc := make(chan error)
+// generates a CSS file and returns the path of the generated CSS file
+// and an error when it occurs.
+func CompileFile(path string) (string, error) {
+	data, err := ioutil.ReadFile(path)
 
-	go func() {
-		data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
 
-		if err != nil {
-			errc <- err
-			return
-		}
+	cssPath := cssFilePath(path)
 
-		cssPath := cssFilePath(path)
+	bc, berrc := compileBytes(data)
 
-		bc, berrc := compileBytes(data)
+	done, werrc := write(cssPath, bc, berrc)
 
-		done, werrc := write(cssPath, bc, berrc)
+	select {
+	case <-done:
+	case err := <-werrc:
+		return "", err
+	}
 
-		select {
-		case <-done:
-			pathc <- cssPath
-		case err := <-werrc:
-			errc <- err
-			return
-		}
-	}()
-
-	return pathc, errc
+	return cssPath, nil
 }
 
 // compileBytes parses the GCSS byte array passed as the s parameter,

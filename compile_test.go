@@ -120,3 +120,11 @@ func TestCompileFile_pattern2(t *testing.T) {
 func Test_complieBytes(t *testing.T) {
 	compileBytes([]byte(""))
 }
+
+func TestPath(t *testing.T) {
+	path := "/test"
+
+	if expected, actual := path+extGCSS, Path(path+extCSS); actual != expected {
+		t.Errorf("returned value should be %q [actual: %q]", expected, actual)
+	}
+}

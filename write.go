@@ -6,8 +6,6 @@ import (
 	"os"
 )
 
-const extCSS = ".css"
-
 // writeFlusher is the interface that groups the basic Write and Flush methods.
 type writeFlusher interface {
 	io.Writer

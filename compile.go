@@ -8,10 +8,15 @@ import (
 	"strings"
 )
 
-// cssFilePath creates and returns the CSS file path.
+// extensions
+const (
+	extCSS  = ".css"
+	extGCSS = ".gcss"
+)
+
+// cssFilePath converts path's extenstion into a CSS file extension.
 var cssFilePath = func(path string) string {
-	ext := filepath.Ext(path)
-	return strings.TrimSuffix(path, ext) + extCSS
+	return convertExt(path, extCSS)
 }
 
 // Compile compiles GCSS data which is read from src and
@@ -114,4 +119,14 @@ func compileBytes(b []byte) (<-chan []byte, <-chan error) {
 	}()
 
 	return bc, errc
+}
+
+// Path converts path's extenstion into a GCSS file extension.
+func Path(path string) string {
+	return convertExt(path, extGCSS)
+}
+
+// convertExt converts path's extension into ext.
+func convertExt(path string, ext string) string {
+	return strings.TrimSuffix(path, filepath.Ext(path)) + ext
 }

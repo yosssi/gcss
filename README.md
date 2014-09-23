@@ -95,7 +95,6 @@ defer func() {
 	if err := f.Close(); err != nil {
 		panic(err)
 	}
-	
 }()
 
 n, err := gcss.Compile(os.Stdout, f)

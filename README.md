@@ -85,13 +85,19 @@ http.ServeFile(w, r, cssPath)
 You can invoke the `gcss.Compile` function instead of the `gcss.CompileFile` function. The `gcss.Compile` function takes `io.Writer` and `io.Reader` as a parameter, compiles the GCSS data which is read from the `io.Reader` and writes the result CSS data to the `io.Writer`. Please see the [GoDoc](http://godoc.org/github.com/yosssi/gcss) for the details.
 
 ```go
-r, err := os.Open("path_to_gcss_file")
+f, err := os.Open("path_to_gcss_file")
 
 if err != nil {
 	panic(err)
 }
 
-n, err := gcss.Compile(os.Stdout, r)
+defer func() {
+	if err := f.Close(); err != nil {
+		panic(err)
+	}
+}()
+
+n, err := gcss.Compile(os.Stdout, f)
 ```
 
 ## Documentation

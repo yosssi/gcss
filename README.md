@@ -4,6 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ocbu6upgr3j0m3vc/branch/master)](https://ci.appveyor.com/project/yosssi/gcss/branch/master)
 [![Coverage Status](https://img.shields.io/coveralls/yosssi/gcss.svg)](https://coveralls.io/r/yosssi/gcss?branch=master)
 [![GoDoc](https://godoc.org/github.com/yosssi/gcss?status.svg)](https://godoc.org/github.com/yosssi/gcss)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/yosssi/gcss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Overview
 

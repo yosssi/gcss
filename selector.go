@@ -75,13 +75,12 @@ func (sel *selector) names() string {
 					bf.WriteString(comma)
 				}
 
-				bf.WriteString(parentS)
-
 				s = strings.TrimSpace(s)
 
-				if strings.HasPrefix(s, ampersand) {
-					bf.WriteString(strings.TrimPrefix(s, ampersand))
+				if strings.Index(s, ampersand) != -1 {
+					bf.WriteString(strings.Replace(s, ampersand, parentS, -1))
 				} else {
+					bf.WriteString(parentS)
 					bf.WriteString(space)
 					bf.WriteString(s)
 				}

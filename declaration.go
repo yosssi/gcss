@@ -31,11 +31,17 @@ func (dec *declaration) writeTo(w io.Writer, params map[string]string) (int64, e
 			bf.WriteString(space)
 		}
 
-		if strings.HasPrefix(v, dollarMark) {
-			// Writing to the bytes.Buffer never returns an error.
-			dec.writeParamTo(bf, strings.TrimPrefix(v, dollarMark), params)
-		} else {
-			bf.WriteString(v)
+		for j, w := range strings.Split(v, comma) {
+			if j > 0 {
+				bf.WriteString(comma)
+			}
+
+			if strings.HasPrefix(w, dollarMark) {
+				// Writing to the bytes.Buffer never returns an error.
+				dec.writeParamTo(bf, strings.TrimPrefix(w, dollarMark), params)
+			} else {
+				bf.WriteString(w)
+			}
 		}
 	}
 

@@ -59,7 +59,7 @@ func (sel *selector) writeTo(w io.Writer, params map[string]string) (int64, erro
 func (sel *selector) names() string {
 	bf := new(bytes.Buffer)
 
-	switch sel.parent.(type) {
+	switch parent := sel.parent.(type) {
 	case nil, *atRule:
 		for _, name := range strings.Split(sel.name, comma) {
 			if bf.Len() > 0 {
@@ -69,7 +69,7 @@ func (sel *selector) names() string {
 			bf.WriteString(strings.TrimSpace(name))
 		}
 	case *selector:
-		for _, parentS := range strings.Split(sel.parent.(*selector).names(), comma) {
+		for _, parentS := range strings.Split(parent.names(), comma) {
 			for _, s := range strings.Split(sel.name, comma) {
 				if bf.Len() > 0 {
 					bf.WriteString(comma)

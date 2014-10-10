@@ -17,13 +17,13 @@ type elementBase struct {
 
 // AppendChild appends a child element to the element.
 func (eBase *elementBase) AppendChild(child element) {
-	switch child.(type) {
+	switch c := child.(type) {
 	case *mixinInvocation:
-		eBase.mixins = append(eBase.mixins, child.(*mixinInvocation))
+		eBase.mixins = append(eBase.mixins, c)
 	case *declaration:
-		eBase.decs = append(eBase.decs, child.(*declaration))
+		eBase.decs = append(eBase.decs, c)
 	case *selector:
-		eBase.sels = append(eBase.sels, child.(*selector))
+		eBase.sels = append(eBase.sels, c)
 	}
 }
 

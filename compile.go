@@ -99,12 +99,10 @@ func compileBytes(b []byte) (<-chan []byte, <-chan error) {
 
 				elem.SetContext(ctx)
 
-				switch elem.(type) {
+				switch v := elem.(type) {
 				case *mixinDeclaration:
-					v := elem.(*mixinDeclaration)
 					ctx.mixins[v.name] = v
 				case *variable:
-					v := elem.(*variable)
 					ctx.vars[v.name] = v
 				case *atRule, *declaration, *selector:
 					bf := new(bytes.Buffer)

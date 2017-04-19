@@ -1,4 +1,5 @@
 # GCSS - Pure Go CSS Preprocessor
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/yosssi/gcss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![wercker status](https://app.wercker.com/status/4857161fd705e6c43df492e6a33ce87f/m "wercker status")](https://app.wercker.com/project/bykey/4857161fd705e6c43df492e6a33ce87f)
 [![Build status](https://ci.appveyor.com/api/projects/status/ocbu6upgr3j0m3vc/branch/master)](https://ci.appveyor.com/project/yosssi/gcss/branch/master)
